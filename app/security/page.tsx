@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { Arrow, PageIntro } from "../_components/SiteChrome";
+import { pageMetadata } from "../_data/metadata";
 
-export const metadata: Metadata = { title: "Security, privacy, and deployment", description: "Review Horalix's security-by-design approach to pilot scoping, data flow, access, retention, vendor review, resilience, and privacy.", alternates: { canonical: "/security" } };
+export const metadata = pageMetadata({ title: "Clinical AI Security, Privacy & Deployment", description: "Review Horalix's security-by-design approach to pilot scoping, data flow, access, retention, vendor review, resilience, and privacy.", path: "/security" });
 
 export default function Security() {
   return <>

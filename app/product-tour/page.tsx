@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { VideoPlayer } from "../_components/VideoPlayer";
 import { Arrow, PageIntro, SplitCta } from "../_components/SiteChrome";
+import { pageMetadata } from "../_data/metadata";
 
-export const metadata: Metadata = { title: "Product tour", description: "Watch the Horalix AI-assisted echocardiography workflow, from DICOM study preparation to clinician review and report-ready output.", alternates: { canonical: "/product-tour" } };
+export const metadata = pageMetadata({ title: "AI-Assisted Echocardiography Product Tour", description: "Watch the Horalix AI-assisted echocardiography workflow, from DICOM study preparation to clinician review and report-ready output.", path: "/product-tour" });
 
 export default function ProductTour() {
   return <>

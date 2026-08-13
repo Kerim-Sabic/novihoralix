@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { Arrow, PageIntro } from "../_components/SiteChrome";
+import { pageMetadata } from "../_data/metadata";
 
-export const metadata: Metadata = { title: "Press", description: "Verified Horalix company information, product description, press enquiries, and approved media resources.", alternates: { canonical: "/press" } };
+export const metadata = pageMetadata({ title: "Horalix Press Information", description: "Verified Horalix company information, product description, press enquiries, and approved media resources.", path: "/press" });
 
 export default function Press() {
   return <><PageIntro eyebrow="Press" title="Clear company information, without inflated claims." copy="Use the approved company description below or contact Horalix for current product, leadership, program, and pilot information." actions={<a className="button button-light" href="mailto:press@horalix.com">Contact press team <Arrow /></a>} />

@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ProductFrame } from "../_components/ProductFrame";
 import { Arrow, PageIntro, SplitCta } from "../_components/SiteChrome";
+import { pageMetadata } from "../_data/metadata";
 
-export const metadata: Metadata = { title: "For clinicians", description: "See how Horalix keeps source views, AI-assisted echo measurements, corrections, and clinician sign-off in one review-led workflow.", alternates: { canonical: "/for-clinicians" } };
+export const metadata = pageMetadata({ title: "AI-Assisted Echocardiography for Clinicians", description: "See how Horalix keeps source views, AI-assisted echo measurements, corrections, and clinician sign-off in one review-led workflow.", path: "/for-clinicians" });
 
 export default function Clinicians() {
   return <>

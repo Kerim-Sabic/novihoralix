@@ -1,15 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MobileNavigation } from "./MobileNavigation";
-
-const nav = [
-  { href: "/platform", label: "Platform" },
-  { href: "/for-hospitals", label: "Hospitals" },
-  { href: "/for-clinicians", label: "Clinicians" },
-  { href: "/evidence", label: "Evidence" },
-  { href: "/security", label: "Security" },
-  { href: "/investors", label: "Investors" },
-];
+import { PrimaryNavigation } from "./PrimaryNavigation";
 
 export function Mark() {
   return (
@@ -27,9 +19,7 @@ export function SiteHeader() {
           <Mark />
           <span className="brand-word">HORALIX</span>
         </Link>
-        <nav aria-label="Primary" className="desktop-nav">
-          {nav.map((item) => <Link href={item.href} key={item.href}>{item.label}</Link>)}
-        </nav>
+        <PrimaryNavigation />
         <div className="header-actions">
           <a className="utility-link" href="https://app.horalix.com" rel="noreferrer">Product login</a>
           <Link className="button button-small button-light" href="/for-hospitals#request">Request demo</Link>

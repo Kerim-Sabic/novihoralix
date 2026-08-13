@@ -30,6 +30,36 @@ test("priority routes render without a client-side loading gate", async () => {
   }
 });
 
+test("priority pages expose route-specific discovery metadata", async () => {
+  const cases = [
+    ["/platform", "AI Echocardiography Workflow Platform", "https://horalix.com/platform"],
+    ["/for-hospitals", "AI Echocardiography for Hospitals", "https://horalix.com/for-hospitals"],
+    ["/evidence", "Clinical AI Evidence &amp; Transparency", "https://horalix.com/evidence"],
+  ];
+  for (const [path, title, canonical] of cases) {
+    const response = await render(path);
+    const html = await response.text();
+    assert.match(html, new RegExp(`<meta property="og:title" content="${title}"`, "i"), path);
+    assert.match(html, new RegExp(`<link rel="canonical" href="${canonical}"`, "i"), path);
+  }
+});
+
+test("platform answers are visible and represented in structured data", async () => {
+  const response = await render("/platform");
+  const html = await response.text();
+  assert.match(html, /What is Horalix\?/);
+  assert.match(html, /Does Horalix diagnose without clinician review\?/);
+  assert.match(html, /"@type":"FAQPage"/);
+  assert.match(html, /"@type":"SoftwareApplication"/);
+});
+
+test("placeholder news is excluded from indexing and the sitemap", async () => {
+  const news = await render("/news");
+  assert.match(await news.text(), /<meta name="robots" content="noindex, follow"/i);
+  const sitemap = await render("/sitemap.xml");
+  assert.doesNotMatch(await sitemap.text(), /<loc>https:\/\/horalix\.com\/news<\/loc>/);
+});
+
 test("legacy solution and demo URLs redirect", async () => {
   const solution = await render("/solutions/pathology-ai");
   assert.equal(solution.status, 308);

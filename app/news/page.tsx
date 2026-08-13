@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
 import { PageIntro } from "../_components/SiteChrome";
+import { pageMetadata } from "../_data/metadata";
 
-export const metadata: Metadata = { title: "News", description: "Verified Horalix company and product updates.", alternates: { canonical: "/news" } };
+export const metadata = pageMetadata({ title: "Horalix News", description: "Verified Horalix company and product updates.", path: "/news", index: false });
 
 export default function News() {
   return <><PageIntro eyebrow="News" title="Updates only when the facts are ready." copy="Company, product, program, pilot, and research announcements appear here after their names, dates, status, and publication rights are approved." />

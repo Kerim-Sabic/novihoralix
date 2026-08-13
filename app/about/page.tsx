@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { Arrow, PageIntro, SplitCta } from "../_components/SiteChrome";
+import { pageMetadata } from "../_data/metadata";
 
-export const metadata: Metadata = { title: "About", description: "Horalix is building an echo-first clinical-AI workflow around transparency, clinician control, responsible validation, and practical deployment.", alternates: { canonical: "/about" } };
+export const metadata = pageMetadata({ title: "About Horalix", description: "Horalix is building an echo-first clinical-AI workflow around transparency, clinician control, responsible validation, and practical deployment.", path: "/about" });
 
 export default function About() {
   return <><PageIntro eyebrow="About Horalix" title="Clinical AI should earn trust through the way it is built." copy="Horalix is developing an echo-first workflow around clinician agency, transparent evidence, and the operational realities of hospital deployment." actions={<Link className="button button-light" href="/contact">Talk with Horalix <Arrow /></Link>} />

@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { LeadForm } from "../_components/LeadForm";
 import { Arrow, PageIntro } from "../_components/SiteChrome";
+import { pageMetadata } from "../_data/metadata";
 
-export const metadata: Metadata = { title: "Contact", description: "Contact Horalix for hospital demos, investor access, partnerships, press, and general company enquiries.", alternates: { canonical: "/contact" } };
+export const metadata = pageMetadata({ title: "Contact Horalix", description: "Contact Horalix for hospital demos, investor access, partnerships, press, and general company enquiries.", path: "/contact" });
 
 export default function Contact() {
   return <><PageIntro eyebrow="Contact Horalix" title="Start with the conversation you need." copy="Choose the most direct route for hospital evaluation, investor access, press, or a general company enquiry." />

@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { Arrow, PageIntro } from "../_components/SiteChrome";
 import { resources } from "../_data/resources";
+import { pageMetadata } from "../_data/metadata";
 
-export const metadata: Metadata = { title: "Clinical AI resources", description: "Expert-led guides on evaluating pilot-stage clinical AI, human oversight in echo AI, and DICOM echocardiography workflow integration.", alternates: { canonical: "/resources" } };
+export const metadata = pageMetadata({ title: "AI Echocardiography & Clinical AI Resources", description: "Expert-led guides on evaluating pilot-stage clinical AI, human oversight in echo AI, and DICOM echocardiography workflow integration.", path: "/resources" });
 
 export default function Resources() {
   return <><PageIntro eyebrow="Research and resources" title="Practical answers for responsible clinical-AI decisions." copy="Concise, source-led guidance for clinicians, hospital teams, and investors evaluating AI-assisted echocardiography workflows." />

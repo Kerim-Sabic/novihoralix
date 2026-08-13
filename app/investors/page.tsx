@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { LeadForm } from "../_components/LeadForm";
 import { Arrow, PageIntro } from "../_components/SiteChrome";
+import { pageMetadata } from "../_data/metadata";
 
-export const metadata: Metadata = { title: "Investors", description: "Horalix investor overview: the echo-lab workflow problem, product approach, responsible clinical-AI thesis, milestones, and private materials request.", alternates: { canonical: "/investors" } };
+export const metadata = pageMetadata({ title: "Horalix Investor Overview", description: "Horalix investor overview: the echo-lab workflow problem, product approach, responsible clinical-AI thesis, milestones, and private materials request.", path: "/investors" });
 
 export default function Investors() {
   return <>

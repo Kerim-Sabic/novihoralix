@@ -18,16 +18,11 @@ export function VideoPlayer() {
     );
   }
 
-  const play = () => {
-    setPlaying(true);
-    window.dispatchEvent(new CustomEvent("horalix:track", { detail: { event: "video_play" } }));
-  };
-
   return (
     <button
       className="video-poster"
       data-track="video_play"
-      onClick={play}
+      onClick={() => setPlaying(true)}
       aria-label="Watch the full Horalix product tour"
     >
       <span className="product-frame compact video-tour-frame">

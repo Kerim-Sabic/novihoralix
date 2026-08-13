@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { Arrow, PageIntro } from "../_components/SiteChrome";
 import { claims } from "../_data/claims";
+import { pageMetadata } from "../_data/metadata";
 
-export const metadata: Metadata = { title: "Evidence and transparency", description: "Horalix evidence center: product status, claim methodology, human oversight, limitations, internal benchmarks, and clearly separated external research.", alternates: { canonical: "/evidence" } };
+export const metadata = pageMetadata({ title: "Clinical AI Evidence & Transparency", description: "Horalix evidence center: product status, claim methodology, human oversight, limitations, internal benchmarks, and clearly separated external research.", path: "/evidence" });
 
 const medicalPage = { "@context": "https://schema.org", "@type": "MedicalWebPage", "@id": "https://horalix.com/evidence#page", name: "Horalix evidence and transparency center", url: "https://horalix.com/evidence", dateReviewed: "2026-08-13", lastReviewed: "2026-08-13", reviewedBy: { "@id": "https://horalix.com/#organization" }, about: { "@id": "https://horalix.com/platform#software" } };
 

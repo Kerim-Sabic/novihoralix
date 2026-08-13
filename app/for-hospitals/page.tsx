@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { LeadForm } from "../_components/LeadForm";
 import { Arrow, PageIntro } from "../_components/SiteChrome";
+import { pageMetadata } from "../_data/metadata";
 
-export const metadata: Metadata = { title: "For hospitals", description: "Evaluate Horalix with a transparent pilot plan covering echo workflow fit, DICOM integration, clinician oversight, evidence, privacy, and security.", alternates: { canonical: "/for-hospitals" } };
+export const metadata = pageMetadata({ title: "AI Echocardiography for Hospitals", description: "Evaluate Horalix with a transparent pilot plan covering echo workflow fit, DICOM integration, clinician oversight, evidence, privacy, and security.", path: "/for-hospitals" });
 
 export default function Hospitals() {
   return <>
