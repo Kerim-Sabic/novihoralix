@@ -5,7 +5,9 @@ const sources = new Set(["direct", "google", "bing", "chatgpt", "linkedin", "oth
 
 export async function POST(request: Request) {
   const origin = request.headers.get("Origin");
-  if (origin && new URL(origin).origin !== new URL(request.url).origin) return new Response(null, { status: 403 });
+  try {
+    if (origin && new URL(origin).origin !== new URL(request.url).origin) return new Response(null, { status: 403 });
+  } catch { return new Response(null, { status: 403 }); }
   let body: { event?: string; path?: string; source?: string };
   try { body = await request.json(); } catch { return new Response(null, { status: 400 }); }
   if (!body.event || !events.has(body.event) || !body.path || body.path.length > 180 || !body.source || !sources.has(body.source)) return new Response(null, { status: 400 });

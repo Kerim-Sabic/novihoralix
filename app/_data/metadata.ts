@@ -17,6 +17,7 @@ export function pageMetadata({ title, description, path, index = true }: PageMet
     openGraph: {
       type: "website",
       siteName: "Horalix",
+      locale: "en_US",
       title,
       description,
       url,

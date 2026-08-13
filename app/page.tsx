@@ -4,6 +4,8 @@ import { ProductFrame } from "./_components/ProductFrame";
 import { Arrow, SplitCta } from "./_components/SiteChrome";
 import { resources } from "./_data/resources";
 
+const homePageSchema = { "@context": "https://schema.org", "@type": "WebPage", "@id": "https://horalix.com/#home", url: "https://horalix.com/", name: "Horalix — AI-assisted echocardiography workflow", description: "Horalix turns DICOM echocardiograms into structured measurements and report-ready outputs for clinician review.", inLanguage: "en", isPartOf: { "@id": "https://horalix.com/#website" }, about: { "@id": "https://horalix.com/platform#software" }, audience: [{ "@type": "MedicalAudience", audienceType: "Clinicians and hospital decision-makers" }, { "@type": "Audience", audienceType: "Healthcare investors" }], primaryImageOfPage: { "@type": "ImageObject", url: "https://horalix.com/og.png" } };
+
 export default function Home() {
   return (
     <>
@@ -67,6 +69,7 @@ export default function Home() {
 
       <section className="section section-line"><div className="shell"><div className="section-heading"><div><p className="eyebrow">Selected research</p><h2>Useful answers for careful buyers.</h2></div><p className="lede">Expert-led resources connect clinical-AI research to the practical decisions hospitals and clinicians face.</p></div><div className="resource-grid">{resources.map((item) => <Link className="resource-card" href={`/resources/${item.slug}`} key={item.slug}><span className="card-label">{item.label}</span><h3>{item.title}</h3><p>{item.description}</p><footer><span>Reviewed {item.reviewed}</span><Arrow /></footer></Link>)}</div></div></section>
       <SplitCta />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homePageSchema) }} />
     </>
   );
 }

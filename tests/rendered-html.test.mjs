@@ -53,6 +53,17 @@ test("platform answers are visible and represented in structured data", async ()
   assert.match(html, /"@type":"SoftwareApplication"/);
 });
 
+test("evidence and resource hubs expose visible answer-oriented structure", async () => {
+  const evidence = await render("/evidence");
+  const evidenceHtml = await evidence.text();
+  assert.match(evidenceHtml, /What has Horalix not yet demonstrated\?/);
+  assert.match(evidenceHtml, /"@type":"FAQPage"/);
+  const resources = await render("/resources");
+  const resourcesHtml = await resources.text();
+  assert.match(resourcesHtml, /"@type":"CollectionPage"/);
+  assert.match(resourcesHtml, /"@type":"ItemList"/);
+});
+
 test("placeholder news is excluded from indexing and the sitemap", async () => {
   const news = await render("/news");
   assert.match(await news.text(), /<meta name="robots" content="noindex, follow"/i);

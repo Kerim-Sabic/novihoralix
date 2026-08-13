@@ -9,6 +9,7 @@ const navigation = [
   { href: "/for-clinicians", label: "Clinicians" },
   { href: "/evidence", label: "Evidence" },
   { href: "/security", label: "Security" },
+  { href: "/resources", label: "Resources" },
   { href: "/investors", label: "Investors" },
 ];
 
@@ -17,7 +18,7 @@ export function PrimaryNavigation() {
   return (
     <nav aria-label="Primary" className="desktop-nav">
       {navigation.map((item) => (
-        <Link href={item.href} key={item.href} aria-current={pathname === item.href ? "page" : undefined}>
+        <Link href={item.href} key={item.href} aria-current={pathname === item.href || (item.href === "/resources" && pathname.startsWith("/resources/")) ? "page" : undefined}>
           {item.label}
         </Link>
       ))}

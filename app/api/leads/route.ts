@@ -23,7 +23,9 @@ async function hashRateKey(value: string, windowStart: number) {
 
 export async function POST(request: Request) {
   const origin = request.headers.get("Origin");
-  if (!origin || new URL(origin).origin !== new URL(request.url).origin) return json({ error: "Invalid request origin." }, 403);
+  try {
+    if (!origin || new URL(origin).origin !== new URL(request.url).origin) return json({ error: "Invalid request origin." }, 403);
+  } catch { return json({ error: "Invalid request origin." }, 403); }
   let body: Record<string, unknown>;
   try {
     const raw = await request.text();
@@ -42,16 +44,17 @@ export async function POST(request: Request) {
 
   const runtime = env as unknown as RuntimeEnv;
   if (!runtime.DB) return json({ error: "Secure form storage is not configured yet." }, 503);
-  if (!runtime.TURNSTILE_SECRET_KEY || !turnstileToken) return json({ error: "Secure verification is not configured yet. Please email hello@horalix.com." }, 503);
-
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-  const turnstile = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ secret: runtime.TURNSTILE_SECRET_KEY, response: turnstileToken, remoteip: ip }) });
-  const verification = await turnstile.json() as { success?: boolean };
-  if (!verification.success) return json({ error: "Security verification failed. Please try again." }, 400);
-
   const now = Date.now(); const windowStart = Math.floor(now / 900_000) * 900_000; const rateKey = await hashRateKey(ip, windowStart);
   const rate = await runtime.DB.prepare("INSERT INTO rate_limits (key, window_start, count) VALUES (?, ?, 1) ON CONFLICT(key) DO UPDATE SET count = count + 1 RETURNING count").bind(rateKey, windowStart).first<{ count: number }>();
   if ((rate?.count || 1) > 5) return json({ error: "Too many requests. Please try again later." }, 429);
+
+  if (runtime.TURNSTILE_SECRET_KEY) {
+    if (!turnstileToken) return json({ error: "Please complete the security verification." }, 400);
+    const verification = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ secret: runtime.TURNSTILE_SECRET_KEY, response: turnstileToken, remoteip: ip }) }).then((response) => response.json() as Promise<{ success?: boolean }>).catch(() => null);
+    if (!verification) return json({ error: "Security verification is temporarily unavailable. Please try again." }, 503);
+    if (!verification.success) return json({ error: "Security verification failed. Please try again." }, 400);
+  }
 
   await runtime.DB.prepare("DELETE FROM leads WHERE created_at < ?").bind(now - 180 * 24 * 60 * 60 * 1000).run();
   await runtime.DB.prepare("DELETE FROM rate_limits WHERE window_start < ?").bind(now - 24 * 60 * 60 * 1000).run();
