@@ -1,4 +1,10 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Arrow, PageIntro } from "../../_components/SiteChrome";
+
+export const metadata: Metadata = {
+  title: "Hospital request received",
+  robots: { index: false, follow: false },
+};
 
 export default function HospitalThanks() { return <><PageIntro eyebrow="Request received" title="Thank you. We’ll shape the next step around your hospital." copy="Your request has been recorded. The Horalix team will follow up using the work email you provided." actions={<><a className="button button-light" data-track="scheduling_click" href={process.env.NEXT_PUBLIC_HOSPITAL_SCHEDULING_URL || "mailto:hello@horalix.com?subject=Horalix%20hospital%20demo"}>Choose a meeting time <Arrow /></a><Link className="button button-ghost" href="/evidence">Review evidence</Link></>} /><section className="section narrow"><div className="note-box">Please do not send patient information or clinical data in follow-up email or scheduling notes.</div></section></>; }

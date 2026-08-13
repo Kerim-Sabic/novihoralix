@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ProductFrame } from "./_components/ProductFrame";
 import { Arrow, SplitCta } from "./_components/SiteChrome";
 import { resources } from "./_data/resources";
@@ -6,16 +7,25 @@ import { resources } from "./_data/resources";
 export default function Home() {
   return (
     <>
+      <link rel="preload" href="/media/echo-contour-poster.webp" as="image" type="image/webp" fetchPriority="high" />
       <section className="hero">
-        <div className="shell hero-copy">
-          <p className="eyebrow">AI-assisted echocardiography workflow</p>
-          <h1>Make every echo ready for review.</h1>
-          <p className="lede">Horalix turns DICOM echocardiograms into structured measurements and report-ready outputs, helping clinicians review faster while retaining final control.</p>
-          <p className="hero-disclosure">Pilot-stage · Pre-clearance · Not for diagnostic use</p>
-          <div className="button-row"><Link className="button button-light" href="/for-hospitals#request">Request a hospital demo <Arrow /></Link><Link className="button button-ghost" href="/investors">Investor overview</Link><Link className="text-link" href="/product-tour">Watch product tour <Arrow /></Link></div>
-          <div className="hero-labels" aria-label="Product status"><span>Pilot-stage</span><span>Europe-first</span><span>DICOM-compatible</span><span>Clinician sign-off</span></div>
+        <Image unoptimized className="hero-monogram" src="/brand/horalix-mark-white.png" alt="" aria-hidden="true" width={653} height={863} sizes="56vw" priority />
+        <div className="shell hero-grid">
+          <div className="hero-copy">
+            <p className="eyebrow"><span className="eyebrow-index">HXR / 01</span> AI-assisted echocardiography workflow</p>
+            <h1>Make every echo <span>ready for review.</span></h1>
+            <p className="lede">Horalix turns DICOM echocardiograms into structured measurements and report-ready outputs, helping clinicians review faster while retaining final control.</p>
+            <p className="hero-disclosure">Pilot-stage · Pre-clearance · Not for diagnostic use</p>
+            <div className="button-row"><Link className="button button-light" href="/for-hospitals#request">Request a hospital demo <Arrow /></Link><Link className="button button-ghost" href="/investors">Investor overview</Link></div>
+            <Link className="hero-tour-link" href="/product-tour"><span className="tour-play" aria-hidden="true">▶</span><span><b>Watch the product tour</b><small>2:16 · loads after selection</small></span><Arrow /></Link>
+          </div>
+          <div className="hero-visual">
+            <div className="hero-visual-index"><span>Echo / Review surface</span><b>01</b></div>
+            <ProductFrame />
+            <p className="hero-caption"><b>Human control is the product boundary.</b> Suggested outputs stay inside a clinician review path.</p>
+          </div>
         </div>
-        <div className="shell hero-product"><ProductFrame /></div>
+        <div className="shell hero-labels" aria-label="Product status"><span>Pilot-stage</span><span>Europe-first</span><span>DICOM-compatible</span><span>Clinician sign-off</span></div>
       </section>
 
       <section className="proof-strip" aria-label="Horalix principles"><div className="shell proof-strip-inner"><p className="proof-intro">Built for a responsible path from pilot to clinical workflow.</p><div className="proof-item"><b>Echo-first</b><span>Focused product scope</span></div><div className="proof-item"><b>Review-led</b><span>Clinician control by design</span></div><div className="proof-item"><b>Evidence-gated</b><span>No unapproved claims</span></div><div className="proof-item"><b>Integration-aware</b><span>DICOM workflow input</span></div></div></section>
@@ -36,8 +46,8 @@ export default function Home() {
 
       <section className="section-tight shell">
         <div className="audience-grid">
-          <article className="audience-card"><div><p className="eyebrow">For clinicians</p><h2>Less preparation. More attention on the study.</h2><p>Keep measurements, source images, and review controls together in a focused workflow.</p><div className="audience-list"><span>Trace each suggestion to its source view</span><span>Edit or reject without losing context</span><span>Retain final review and sign-off</span></div></div><Link className="text-link" href="/for-clinicians">Explore the clinician workflow <Arrow /></Link></article>
-          <article className="audience-card"><div><p className="eyebrow">For hospitals</p><h2>Evaluate clinical AI without hiding the hard questions.</h2><p>Scope workflow fit, integration, oversight, security, and evidence before a pilot begins.</p><div className="audience-list"><span>Defined pilot boundaries and responsibilities</span><span>Transparent product and regulatory status</span><span>Deployment and governance discovery</span></div></div><Link className="text-link" href="/for-hospitals">Plan a responsible pilot <Arrow /></Link></article>
+          <article className="audience-card"><div><p className="eyebrow">For clinicians</p><h2>A review surface built around the study.</h2><p>Keep measurements, source images, and review controls together in a focused workflow.</p><div className="audience-list"><span>Trace each suggestion to its source view</span><span>Edit or reject without losing context</span><span>Retain final review and sign-off</span></div></div><Link className="text-link" href="/for-clinicians">Explore the clinician workflow <Arrow /></Link></article>
+          <article className="audience-card"><div><p className="eyebrow">For hospitals</p><h2>Bring the hard questions into the pilot plan.</h2><p>Scope workflow fit, integration, oversight, security, and evidence before a pilot begins.</p><div className="audience-list"><span>Defined pilot boundaries and responsibilities</span><span>Transparent product and regulatory status</span><span>Deployment and governance discovery</span></div></div><Link className="text-link" href="/for-hospitals">Plan a responsible pilot <Arrow /></Link></article>
         </div>
       </section>
 
@@ -51,8 +61,8 @@ export default function Home() {
       </section>
 
       <section className="section shell">
-        <div className="section-heading"><div><p className="eyebrow">Leadership</p><h2>Clinical focus, technical discipline.</h2></div><div><p className="lede">Horalix is building an echo-first company around transparent development, responsible evaluation, and useful workflow design.</p><Link className="text-link" href="/about">Meet Horalix <Arrow /></Link></div></div>
-        <div className="metricless-grid"><div className="metricless-card"><b>01 · Product</b><p>A deliberately narrow echo-first scope for a clearer validation path.</p></div><div className="metricless-card"><b>02 · Clinical</b><p>Human review is an operating requirement, not a footer disclaimer.</p></div><div className="metricless-card"><b>03 · Company</b><p>Partner, program, and pilot proof is published only after verification.</p></div></div>
+        <div className="section-heading"><div><p className="eyebrow">Company approach</p><h2>Clinical focus, technical discipline.</h2></div><div><p className="lede">Horalix is building an echo-first company around transparent development, responsible evaluation, and useful workflow design.</p><Link className="text-link" href="/about">How Horalix works <Arrow /></Link></div></div>
+        <div className="metricless-grid"><div className="metricless-card"><b>01 · Product</b><p>A deliberately narrow echo-first scope for a clearer validation path.</p></div><div className="metricless-card"><b>02 · Clinical</b><p>Human review is built into the operating workflow.</p></div><div className="metricless-card"><b>03 · Company</b><p>Partner, program, and pilot proof is published only after verification.</p></div></div>
       </section>
 
       <section className="section section-line"><div className="shell"><div className="section-heading"><div><p className="eyebrow">Selected research</p><h2>Useful answers for careful buyers.</h2></div><p className="lede">Expert-led resources connect clinical-AI research to the practical decisions hospitals and clinicians face.</p></div><div className="resource-grid">{resources.map((item) => <Link className="resource-card" href={`/resources/${item.slug}`} key={item.slug}><span className="card-label">{item.label}</span><h3>{item.title}</h3><p>{item.description}</p><footer><span>Reviewed {item.reviewed}</span><Arrow /></footer></Link>)}</div></div></section>

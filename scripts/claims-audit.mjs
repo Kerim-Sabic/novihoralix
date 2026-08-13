@@ -4,7 +4,7 @@ import { join } from "node:path";
 const roots = ["app"];
 const banned = /\b(guarantee|guaranteed|proven|autonomous|replaces|fda-approved|clinically accurate)\b/i;
 const unsupportedPerformance = /\b\d{2,}(?:\.\d+)?\s*(?:%|percent|seconds?|measurements?|outputs?)\b/i;
-const exclusions = new Set(["app/_data/claims.ts", "app/_components/ProductFrame.tsx"]);
+const exclusions = new Set(["app/_data/claims.ts"]);
 const failures = [];
 
 async function walk(path) {

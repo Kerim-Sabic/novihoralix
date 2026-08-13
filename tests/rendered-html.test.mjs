@@ -14,10 +14,11 @@ test("server-renders the Horalix homepage as useful HTML", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /<title>Horalix — AI-assisted echocardiography workflow<\/title>/i);
-  assert.match(html, /<h1[^>]*>Make every echo ready for review\.<\/h1>/i);
+  assert.match(html, /<h1[^>]*>Make every echo[\s\S]*ready for review\.[\s\S]*<\/h1>/i);
   assert.match(html, /Pilot-stage/);
   assert.match(html, /Clinician sign-off/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton|PathologyAI|RadiologyAI/i);
+  assert.doesNotMatch(html, /LVID 48\.2|Length 82\.4|Septal thickness/i);
 });
 
 test("priority routes render without a client-side loading gate", async () => {

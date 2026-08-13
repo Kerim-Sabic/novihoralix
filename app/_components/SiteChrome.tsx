@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import { MobileNavigation } from "./MobileNavigation";
 
 const nav = [
   { href: "/platform", label: "Platform" },
@@ -11,10 +13,9 @@ const nav = [
 
 export function Mark() {
   return (
-    <svg aria-hidden="true" className="brand-mark" viewBox="0 0 42 42">
-      <path d="M7 21h7l3.2-8 5.3 16 3.7-10 2.4 2H35" />
-      <circle cx="21" cy="21" r="18" />
-    </svg>
+    <span className="brand-mark" aria-hidden="true">
+      <Image unoptimized src="/brand/horalix-mark-white.png" alt="" width={653} height={863} sizes="38px" />
+    </span>
   );
 }
 
@@ -24,7 +25,7 @@ export function SiteHeader() {
       <div className="shell header-inner">
         <Link className="brand" href="/" aria-label="Horalix home">
           <Mark />
-          <span>horalix</span>
+          <span className="brand-word">HORALIX</span>
         </Link>
         <nav aria-label="Primary" className="desktop-nav">
           {nav.map((item) => <Link href={item.href} key={item.href}>{item.label}</Link>)}
@@ -33,16 +34,7 @@ export function SiteHeader() {
           <a className="utility-link" href="https://app.horalix.com" rel="noreferrer">Product login</a>
           <Link className="button button-small button-light" href="/for-hospitals#request">Request demo</Link>
         </div>
-        <details className="mobile-nav">
-          <summary aria-label="Open navigation"><span /><span /></summary>
-          <nav aria-label="Mobile">
-            {nav.map((item) => <Link href={item.href} key={item.href}>{item.label}</Link>)}
-            <Link href="/product-tour">Product tour</Link>
-            <Link href="/resources">Resources</Link>
-            <Link href="/about">About</Link>
-            <Link className="button button-light" href="/for-hospitals#request">Request demo</Link>
-          </nav>
-        </details>
+        <MobileNavigation />
       </div>
     </header>
   );
@@ -53,7 +45,7 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="shell footer-grid">
         <div className="footer-brand">
-          <Link className="brand" href="/"><Mark /><span>horalix</span></Link>
+          <Link className="brand" href="/"><Mark /><span className="brand-word">HORALIX</span></Link>
           <p>AI-assisted echocardiography workflow, built around clinician review.</p>
           <div className="status-note"><span /> Pilot-stage · Pre-clearance</div>
         </div>
