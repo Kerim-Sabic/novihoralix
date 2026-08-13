@@ -1,0 +1,18 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Breadcrumbs } from "../../_components/SiteChrome";
+import { getResource, resources } from "../../_data/resources";
+
+export function generateStaticParams() { return resources.map((resource) => ({ slug: resource.slug })); }
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params; const resource = getResource(slug); if (!resource) return {};
+  return { title: resource.title, description: resource.description, alternates: { canonical: `/resources/${slug}` }, openGraph: { type: "article", title: resource.title, description: resource.description, publishedTime: "2026-08-13", modifiedTime: "2026-08-13" } };
+}
+
+export default async function ResourceArticle({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params; const resource = getResource(slug); if (!resource) notFound();
+  const article = { "@context": "https://schema.org", "@graph": [{ "@type": "MedicalWebPage", "@id": `https://horalix.com/resources/${slug}#page`, name: resource.title, url: `https://horalix.com/resources/${slug}`, dateReviewed: "2026-08-13", reviewedBy: { "@id": "https://horalix.com/#organization" } }, { "@type": "Article", headline: resource.title, description: resource.description, datePublished: "2026-08-13", dateModified: "2026-08-13", author: { "@id": "https://horalix.com/#organization" }, publisher: { "@id": "https://horalix.com/#organization" }, mainEntityOfPage: { "@id": `https://horalix.com/resources/${slug}#page` } }, { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Resources", item: "https://horalix.com/resources" }, { "@type": "ListItem", position: 2, name: resource.title, item: `https://horalix.com/resources/${slug}` }] }] };
+  return <><article><header className="article-hero"><div className="shell"><Breadcrumbs items={[{ label: "Resources", href: "/resources" }, { label: resource.label }]} /><p className="eyebrow">{resource.label}</p><h1>{resource.title}</h1><p className="lede">{resource.description}</p><div className="article-meta"><span>Written and reviewed by Horalix clinical content team</span><span>Reviewed {resource.reviewed}</span><span>{resource.readTime} read</span></div></div></header><div className="article-body narrow"><div className="answer-box"><strong>Short answer:</strong> {resource.answer}</div>{resource.sections.map((section) => <section key={section.title}><h2>{section.title}</h2>{section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</section>)}<div className="article-sources"><p className="eyebrow">Primary sources</p>{resource.sources.map((source) => <a href={source.href} key={source.href} rel="noreferrer">{source.title} ↗</a>)}</div><div className="note-box" style={{ marginTop: 40 }}>This educational resource does not establish Horalix product performance or suitability for a particular clinical environment. <Link href="/evidence">Review the Horalix evidence boundary.</Link></div></div></article><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(article) }} /></>;
+}
