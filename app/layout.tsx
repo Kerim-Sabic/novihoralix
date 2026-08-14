@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import "@fontsource-variable/inter";
+import "@fontsource-variable/manrope";
 import "./globals.css";
 import { Analytics } from "./_components/Analytics";
 import { MotionLayer } from "./_components/MotionLayer";

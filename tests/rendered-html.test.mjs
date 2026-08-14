@@ -72,6 +72,21 @@ test("research articles name their author and company reviewer", async () => {
   assert.match(html, /"reviewedBy":\{"@id":"https:\/\/horalix\.com\/about#neuman-alkhalil"\}/);
 });
 
+test("the team page renders all four verified portraits and Person records", async () => {
+  const response = await render("/about");
+  const html = await response.text();
+  for (const [name, image] of [
+    ["Kerim Sabic", "/team/kerim-sabic.webp"],
+    ["Amr Husain", "/team/amr-husain.png"],
+    ["Affan Kapidzic", "/team/affan-kapidzic.png"],
+    ["Neuman Alkhalil", "/team/neuman-alkhalil.png"],
+  ]) {
+    assert.match(html, new RegExp(name));
+    assert.match(html, new RegExp(image.replaceAll("/", "\\/")));
+  }
+  assert.equal((html.match(/"@type":"Person"/g) || []).length, 4);
+});
+
 test("verified news is indexable, in the sitemap, and individual updates render", async () => {
   const news = await render("/news");
   const newsHtml = await news.text();
