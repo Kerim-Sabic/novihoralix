@@ -36,9 +36,16 @@ const worker = {
       "/solutions/radiology-ai": "/platform",
       "/demo/horalix-demo.html": "/product-tour",
     };
+    const publishedNews = new Set([
+      "/news/maribor-hospital-pilot-ai-echocardiography-workflow",
+      "/news/clinic-validation-in-sarajevo-poliklinika-dr-nabil",
+      "/news/horalix-nvidia-inception",
+      "/news/techstars-sarajevo-founder-catalyst",
+    ]);
+    const normalizedPath = url.pathname.length > 1 ? url.pathname.replace(/\/$/, "") : url.pathname;
     const redirect = exactRedirects[url.pathname]
       ?? (url.pathname.startsWith("/team/") ? "/about#team" : undefined)
-      ?? (url.pathname.startsWith("/news/") ? "/news" : undefined);
+      ?? (url.pathname.startsWith("/news/") && !publishedNews.has(normalizedPath) ? "/news" : undefined);
     if (redirect) return new Response(null, { status: 308, headers: { Location: redirect, "Cache-Control": "public, max-age=86400" } });
 
     if (url.pathname === "/_vinext/image") {

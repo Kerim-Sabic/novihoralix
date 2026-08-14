@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "../../_components/ReliableLink";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "../../_components/SiteChrome";
 import { getResource, resources } from "../../_data/resources";

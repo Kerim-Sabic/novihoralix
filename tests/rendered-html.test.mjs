@@ -64,11 +64,27 @@ test("evidence and resource hubs expose visible answer-oriented structure", asyn
   assert.match(resourcesHtml, /"@type":"ItemList"/);
 });
 
-test("placeholder news is excluded from indexing and the sitemap", async () => {
+test("verified news is indexable, in the sitemap, and individual updates render", async () => {
   const news = await render("/news");
-  assert.match(await news.text(), /<meta name="robots" content="noindex, follow"/i);
+  const newsHtml = await news.text();
+  assert.equal(news.status, 200);
+  assert.match(newsHtml, /Progress, with the status attached/);
+  assert.doesNotMatch(newsHtml, /noindex/i);
   const sitemap = await render("/sitemap.xml");
-  assert.doesNotMatch(await sitemap.text(), /<loc>https:\/\/horalix\.com\/news<\/loc>/);
+  const sitemapXml = await sitemap.text();
+  assert.match(sitemapXml, /<loc>https:\/\/horalix\.com\/news<\/loc>/);
+  assert.match(sitemapXml, /horalix-nvidia-inception/);
+  const article = await render("/news/horalix-nvidia-inception");
+  assert.equal(article.status, 200);
+  assert.match(await article.text(), /"@type":"NewsArticle"/);
+});
+
+test("navigation is server-resilient and brand film has no user controls or captions", async () => {
+  const response = await render();
+  const html = await response.text();
+  assert.match(html, /<a[^>]+href="\/platform"[^>]*>Platform<\/a>/);
+  assert.match(html, /<video[^>]+autoplay[^>]+muted[^>]+playsinline/i);
+  assert.doesNotMatch(html, /<track|controls=""|controls="true"/i);
 });
 
 test("legacy solution and demo URLs redirect", async () => {

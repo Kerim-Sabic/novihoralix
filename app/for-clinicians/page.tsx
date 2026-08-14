@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "../_components/ReliableLink";
 import { ProductFrame } from "../_components/ProductFrame";
 import { Arrow, PageIntro, SplitCta } from "../_components/SiteChrome";
 import { pageMetadata } from "../_data/metadata";

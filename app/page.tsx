@@ -1,15 +1,59 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "./_components/ReliableLink";
 import { ProductFrame } from "./_components/ProductFrame";
 import { Arrow, SplitCta } from "./_components/SiteChrome";
+import { approvedClaim } from "./_data/claims";
 import { resources } from "./_data/resources";
 
-const homePageSchema = { "@context": "https://schema.org", "@type": "WebPage", "@id": "https://horalix.com/#home", url: "https://horalix.com/", name: "Horalix — AI-assisted echocardiography workflow", description: "Horalix turns DICOM echocardiograms into structured measurements and report-ready outputs for clinician review.", inLanguage: "en", isPartOf: { "@id": "https://horalix.com/#website" }, about: { "@id": "https://horalix.com/platform#software" }, audience: [{ "@type": "MedicalAudience", audienceType: "Clinicians and hospital decision-makers" }, { "@type": "Audience", audienceType: "Healthcare investors" }], primaryImageOfPage: { "@type": "ImageObject", url: "https://horalix.com/og.png" } };
+const faq = [
+  {
+    question: "What is Horalix?",
+    answer: "Horalix is a Sarajevo-based medical-AI startup developing an AI-assisted echocardiography workflow that prepares structured measurements and report-ready outputs for clinician review.",
+  },
+  {
+    question: "Is Horalix a Bosnian AI startup?",
+    answer: "Yes. Horalix was founded in Sarajevo, Bosnia and Herzegovina, and is building an echo-first clinical-AI product for European hospital workflows.",
+  },
+  {
+    question: "How does Horalix fit into the Balkan AI ecosystem?",
+    answer: "Horalix is an emerging Sarajevo medtech startup with three company-confirmed pilot collaborations, selection for Techstars Sarajevo Founder Catalyst, and NVIDIA Inception membership. These are specific milestones, not a claim of an objective regional ranking.",
+  },
+  {
+    question: "Does Horalix replace the cardiologist?",
+    answer: "No. Horalix is designed to assist preparation. Clinicians inspect, edit, accept, or reject suggestions and retain final review and sign-off.",
+  },
+  {
+    question: "Is Horalix cleared for independent diagnosis?",
+    answer: "No. Horalix is pilot-stage and pre-clearance. It is not presented as an independent diagnostic system or as approved for routine clinical use.",
+  },
+];
+
+const homePageSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://horalix.com/#home",
+      url: "https://horalix.com/",
+      name: "Horalix — Sarajevo medical AI for echocardiography workflow",
+      description: "Horalix is a Sarajevo medical-AI startup building an AI-assisted echocardiography workflow for clinician review.",
+      inLanguage: "en",
+      isPartOf: { "@id": "https://horalix.com/#website" },
+      about: [{ "@id": "https://horalix.com/#organization" }, { "@id": "https://horalix.com/platform#software" }],
+      primaryImageOfPage: { "@type": "ImageObject", url: "https://horalix.com/og.png" },
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://horalix.com/#faq",
+      mainEntity: faq.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })),
+    },
+  ],
+};
 
 export default function Home() {
   return (
     <>
-      <link rel="preload" href="/media/echo-contour-poster.webp" as="image" type="image/webp" fetchPriority="high" />
+      <link rel="preload" href="/media/horalix-brand-film-poster.webp" as="image" type="image/webp" fetchPriority="high" />
       <section className="hero">
         <Image unoptimized className="hero-monogram" src="/brand/horalix-mark-white.png" alt="" aria-hidden="true" width={653} height={863} sizes="56vw" priority />
         <div className="shell hero-grid">
@@ -19,10 +63,10 @@ export default function Home() {
             <p className="lede">Horalix turns DICOM echocardiograms into structured measurements and report-ready outputs, helping clinicians review faster while retaining final control.</p>
             <p className="hero-disclosure">Pilot-stage · Pre-clearance · Not for diagnostic use</p>
             <div className="button-row"><Link className="button button-light" href="/for-hospitals#request">Request a hospital demo <Arrow /></Link><Link className="button button-ghost" href="/investors">Investor overview</Link></div>
-            <Link className="hero-tour-link" href="/product-tour"><span className="tour-play" aria-hidden="true">▶</span><span><b>Watch the product tour</b><small>2:16 · loads after selection</small></span><Arrow /></Link>
+            <Link className="hero-tour-link" href="/product-tour"><span className="tour-play" aria-hidden="true">▶</span><span><b>Watch the clinical product tour</b><small>Product UI · loads after selection</small></span><Arrow /></Link>
           </div>
           <div className="hero-visual">
-            <div className="hero-visual-index"><span>Echo / Review surface</span><b>01</b></div>
+            <div className="hero-visual-index"><span>Sarajevo / Echo / Human review</span><b>01</b></div>
             <ProductFrame />
             <p className="hero-caption"><b>Human control is the product boundary.</b> Suggested outputs stay inside a clinician review path.</p>
           </div>
@@ -30,44 +74,34 @@ export default function Home() {
         <div className="shell hero-labels" aria-label="Product status"><span>Pilot-stage</span><span>Europe-first</span><span>DICOM-compatible</span><span>Clinician sign-off</span></div>
       </section>
 
-      <section className="proof-strip" aria-label="Horalix principles"><div className="shell proof-strip-inner"><p className="proof-intro">Built for a responsible path from pilot to clinical workflow.</p><div className="proof-item"><b>Echo-first</b><span>Focused product scope</span></div><div className="proof-item"><b>Review-led</b><span>Clinician control by design</span></div><div className="proof-item"><b>Evidence-gated</b><span>No unapproved claims</span></div><div className="proof-item"><b>Integration-aware</b><span>DICOM workflow input</span></div></div></section>
+      <section className="proof-strip" aria-label="Horalix company proof"><div className="shell proof-strip-inner"><p className="proof-intro">A Sarajevo medical-AI company moving from focused product to responsible hospital evaluation.</p><div className="proof-item"><b>Three active pilots</b><span>Company-confirmed collaborations</span></div><div className="proof-item"><b>Techstars Sarajevo</b><span>Founder Catalyst · Fall 2025</span></div><div className="proof-item"><b>NVIDIA Inception</b><span>Startup program member</span></div><div className="proof-item"><b>Bosnia &amp; Herzegovina</b><span>Built in Sarajevo</span></div></div></section>
+
+      <section className="section shell" id="pilots">
+        <div className="section-heading"><div><p className="eyebrow">Active clinical collaborations</p><h2>Learning inside real echo workflows.</h2></div><div><p className="lede">{approvedClaim("active-pilot-collaborations")}</p><p className="microcopy">“Pilot” means a scoped evaluation collaboration. It does not imply completed clinical validation, regulatory clearance, or routine clinical use.</p></div></div>
+        <div className="pilot-grid">
+          <article className="pilot-card pilot-card-image"><Image src="/proof/ukc-maribor.webp" alt="UKC Maribor and Horalix pilot collaboration" width={1200} height={676} sizes="(max-width: 720px) 100vw, 33vw" /><div><span className="pilot-state">Active pilot · Slovenia</span><h3>UKC Maribor</h3><p>Real-workflow evaluation under physician supervision.</p><Link className="text-link" href="/news/maribor-hospital-pilot-ai-echocardiography-workflow">Read the pilot note <Arrow /></Link></div></article>
+          <article className="pilot-card pilot-card-asa"><div className="pilot-monogram" aria-hidden="true">ASA</div><div><span className="pilot-state">Active pilot · Bosnia and Herzegovina</span><h3>ASA Hospital</h3><p>A company-confirmed collaboration. Public scope and outcomes will be published only after joint approval.</p><a className="text-link" href="https://asabolnica.ba/" rel="noreferrer">Visit ASA Hospital <Arrow /></a></div></article>
+          <article className="pilot-card pilot-card-image"><Image src="/proof/dr-nabil.webp" alt="Horalix and Poliklinika Dr Nabil clinical evaluation collaboration" width={1200} height={600} sizes="(max-width: 720px) 100vw, 33vw" /><div><span className="pilot-state">Active pilot · Sarajevo</span><h3>Poliklinika Dr Nabil</h3><p>Evaluation of Horalix inside a supervised clinical setting.</p><Link className="text-link" href="/news/clinic-validation-in-sarajevo-poliklinika-dr-nabil">Read the evaluation note <Arrow /></Link></div></article>
+        </div>
+      </section>
+
+      <section className="program-band section-dark"><div className="shell program-grid"><div><p className="eyebrow">Verified company milestones</p><h2>Built in Sarajevo. Connected to a global AI ecosystem.</h2></div><div className="program-list"><a href="https://www.techstars.com/blog/program-news/techstars-launches-first-startup-community-partnership-founder-catalyst" rel="noreferrer"><span>01</span><div><b>Techstars Sarajevo Founder Catalyst</b><small>Selected for the Fall 2025 cohort</small></div><Arrow /></a><a href="https://www.nvidia.com/en-us/startups/" rel="noreferrer"><span>02</span><div><b>NVIDIA Inception</b><small>Member of NVIDIA’s startup-support program</small></div><Arrow /></a></div></div><p className="shell program-disclosure">Program participation does not imply product endorsement, investment, regulatory status, or clinical validation.</p></section>
 
       <section className="section shell">
         <div className="section-heading"><div><p className="eyebrow">One clear workflow</p><h2>From study to review-ready output.</h2></div><p className="lede">Horalix is designed to reduce repetitive preparation while keeping every suggested result inside the clinician’s review path.</p></div>
-        <div className="workflow-grid">
-          <article className="workflow-step"><span className="step-no">01 · INPUT</span><h3>Receive the DICOM study.</h3><p>Route eligible echocardiography studies into a scoped pilot workflow with integration details confirmed for the local environment.</p></article>
-          <article className="workflow-step"><span className="step-no">02 · ASSIST</span><h3>Prepare measurements and overlays.</h3><p>Organize AI-assisted outputs alongside their source views so reviewers can inspect the result in context.</p></article>
-          <article className="workflow-step"><span className="step-no">03 · REVIEW</span><h3>Review, adjust, and sign off.</h3><p>The clinician accepts, edits, or rejects suggested outputs before anything becomes report-ready.</p></article>
-        </div>
+        <div className="workflow-grid"><article className="workflow-step"><span className="step-no">01 · INPUT</span><h3>Receive the DICOM study.</h3><p>Route eligible echocardiography studies into a scoped pilot workflow with integration details confirmed for the local environment.</p></article><article className="workflow-step"><span className="step-no">02 · ASSIST</span><h3>Prepare measurements and overlays.</h3><p>Organize AI-assisted outputs beside their source views so reviewers can inspect the result in context.</p></article><article className="workflow-step"><span className="step-no">03 · REVIEW</span><h3>Review, adjust, and sign off.</h3><p>The clinician accepts, edits, or rejects suggested outputs before anything becomes report-ready.</p></article></div>
       </section>
 
-      <section className="section-tight shell">
-        <div className="section-heading"><div><p className="eyebrow">How oversight works</p><h2>Every suggested output passes through a human decision.</h2></div><p className="lede">The product assists preparation. It does not autonomously report, provide patient-facing output, or bypass clinician review.</p></div>
-        <div className="timeline"><div className="timeline-row"><b>Ingest</b><p>An eligible DICOM echo study enters the agreed pilot workflow.</p></div><div className="timeline-row"><b>Prepare</b><p>Horalix suggests structured measurements and view-linked overlays.</p></div><div className="timeline-row"><b>Review</b><p>The clinician inspects, edits, accepts, or rejects each relevant suggestion.</p></div><div className="timeline-row"><b>Sign off</b><p>The clinician retains responsibility for the final reviewed output; review events support workflow traceability.</p></div></div>
-      </section>
+      <section className="section-tight shell"><div className="audience-grid"><article className="audience-card"><div><p className="eyebrow">For clinicians</p><h2>A review surface built around the study.</h2><p>Keep measurements, source images, and review controls together in a focused workflow.</p><div className="audience-list"><span>Trace suggestions to their source view</span><span>Edit or reject without losing context</span><span>Retain final review and sign-off</span></div></div><Link className="text-link" href="/for-clinicians">Explore the clinician workflow <Arrow /></Link></article><article className="audience-card"><div><p className="eyebrow">For hospitals</p><h2>Bring the hard questions into the pilot plan.</h2><p>Scope workflow fit, integration, oversight, security, and evidence before a pilot begins.</p><div className="audience-list"><span>Defined pilot boundaries and responsibilities</span><span>Transparent product and regulatory status</span><span>Deployment and governance discovery</span></div></div><Link className="text-link" href="/for-hospitals">Plan a responsible pilot <Arrow /></Link></article></div></section>
 
-      <section className="section-tight shell">
-        <div className="audience-grid">
-          <article className="audience-card"><div><p className="eyebrow">For clinicians</p><h2>A review surface built around the study.</h2><p>Keep measurements, source images, and review controls together in a focused workflow.</p><div className="audience-list"><span>Trace each suggestion to its source view</span><span>Edit or reject without losing context</span><span>Retain final review and sign-off</span></div></div><Link className="text-link" href="/for-clinicians">Explore the clinician workflow <Arrow /></Link></article>
-          <article className="audience-card"><div><p className="eyebrow">For hospitals</p><h2>Bring the hard questions into the pilot plan.</h2><p>Scope workflow fit, integration, oversight, security, and evidence before a pilot begins.</p><div className="audience-list"><span>Defined pilot boundaries and responsibilities</span><span>Transparent product and regulatory status</span><span>Deployment and governance discovery</span></div></div><Link className="text-link" href="/for-hospitals">Plan a responsible pilot <Arrow /></Link></article>
-        </div>
-      </section>
+      <section className="section section-dark"><div className="shell evidence-grid"><article className="evidence-main evidence-main-dark"><p className="eyebrow">Evidence before adjectives</p><p className="big-statement">Trust should be inspectable.</p><footer><p>Product evidence, field literature, human oversight, intended workflow, limitations, and regulatory status are separated clearly.</p><Link className="text-link" href="/evidence">Open the evidence center <Arrow /></Link></footer></article><aside className="evidence-side"><p className="eyebrow">Current posture</p><blockquote>Horalix is pilot-stage and pre-clearance. Outputs require clinician review and are not an independent diagnosis.</blockquote><Link className="text-link" href="/security">Review security approach <Arrow /></Link></aside></div></section>
 
-      <section className="section shell">
-        <div className="section-heading"><div><p className="eyebrow">Evidence before adjectives</p><h2>Trust should be inspectable.</h2></div><p className="lede">Public evidence is separated from field literature, and unapproved numeric claims automatically fall back to non-numeric wording.</p></div>
-        <div className="evidence-grid"><article className="evidence-main"><p className="eyebrow">Current evidence posture</p><p className="big-statement">Horalix is pilot-stage and pre-clearance. Outputs require clinician review and are not an independent diagnosis.</p><footer><p>Product performance figures will appear only after the protocol, sample, environment, product version, limitations, and internal approval are published together.</p><Link className="text-link" href="/evidence">Open the evidence center <Arrow /></Link></footer></article><aside className="evidence-side"><blockquote>“A credible clinical-AI website should make the boundary between product evidence and field evidence impossible to miss.”</blockquote><cite>Horalix evidence publishing principle</cite></aside></div>
-      </section>
+      <section className="section shell founder-preview"><div className="founder-preview-image"><Image src="/team/kerim-sabic.webp" alt="Kerim Sabic, CEO and co-founder of Horalix" width={720} height={720} sizes="(max-width: 720px) 100vw, 42vw" /></div><div><p className="eyebrow">Company and team</p><h2>A Sarajevo team building for the room where decisions happen.</h2><p className="lede">Horalix brings product, clinical, machine-learning, and operating disciplines into one focused echo-first company.</p><p className="founder-name"><b>Kerim Sabic</b><span>CEO &amp; Co-Founder</span></p><Link className="text-link" href="/about#team">Meet the Horalix team <Arrow /></Link></div></section>
 
-      <section className="section section-dark">
-        <div className="shell grid-2"><div><p className="eyebrow">Deployment and trust</p><h2>Designed for the workflow around the model.</h2><p className="lede">Integration, privacy, access, failure handling, and clinician agency belong in the product conversation from day one.</p><div className="button-row"><Link className="button button-light" href="/security">Review security approach <Arrow /></Link><Link className="button button-ghost" href="/platform">Explore the platform</Link></div></div><div className="trust-list"><div className="trust-row"><span>Integration</span><p>DICOM routing and export requirements are confirmed during pilot scoping; compatibility is never treated as universal.</p></div><div className="trust-row"><span>Privacy</span><p>Business lead forms reject clinical data, avoid raw IP storage, and keep personal data out of analytics.</p></div><div className="trust-row"><span>Control</span><p>Suggested outputs remain visible, editable, and subject to clinician sign-off.</p></div><div className="trust-row"><span>Resilience</span><p>Pilot planning defines unavailable-service, unsupported-study, and recovery paths before go-live.</p></div></div></div>
-      </section>
+      <section className="section section-line"><div className="shell"><div className="section-heading"><div><p className="eyebrow">Selected research</p><h2>Useful answers for careful buyers.</h2></div><p className="lede">Expert-led resources connect clinical-AI research to the decisions hospitals and clinicians face.</p></div><div className="resource-grid">{resources.map((item) => <Link className="resource-card" href={`/resources/${item.slug}`} key={item.slug}><span className="card-label">{item.label}</span><h3>{item.title}</h3><p>{item.description}</p><footer><span>Reviewed {item.reviewed}</span><Arrow /></footer></Link>)}</div></div></section>
 
-      <section className="section shell">
-        <div className="section-heading"><div><p className="eyebrow">Company approach</p><h2>Clinical focus, technical discipline.</h2></div><div><p className="lede">Horalix is building an echo-first company around transparent development, responsible evaluation, and useful workflow design.</p><Link className="text-link" href="/about">How Horalix works <Arrow /></Link></div></div>
-        <div className="metricless-grid"><div className="metricless-card"><b>01 · Product</b><p>A deliberately narrow echo-first scope for a clearer validation path.</p></div><div className="metricless-card"><b>02 · Clinical</b><p>Human review is built into the operating workflow.</p></div><div className="metricless-card"><b>03 · Company</b><p>Partner, program, and pilot proof is published only after verification.</p></div></div>
-      </section>
+      <section className="section shell faq-section"><div className="section-heading"><div><p className="eyebrow">Clear answers</p><h2>Horalix, in plain language.</h2></div><p className="lede">Concise, source-aligned answers for clinicians, hospitals, investors, search engines, and AI assistants.</p></div><div className="faq-list">{faq.map((item) => <details key={item.question}><summary>{item.question}<span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}</div></section>
 
-      <section className="section section-line"><div className="shell"><div className="section-heading"><div><p className="eyebrow">Selected research</p><h2>Useful answers for careful buyers.</h2></div><p className="lede">Expert-led resources connect clinical-AI research to the practical decisions hospitals and clinicians face.</p></div><div className="resource-grid">{resources.map((item) => <Link className="resource-card" href={`/resources/${item.slug}`} key={item.slug}><span className="card-label">{item.label}</span><h3>{item.title}</h3><p>{item.description}</p><footer><span>Reviewed {item.reviewed}</span><Arrow /></footer></Link>)}</div></div></section>
       <SplitCta />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homePageSchema) }} />
     </>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "./ReliableLink";
 import Image from "next/image";
 import { MobileNavigation } from "./MobileNavigation";
 import { PrimaryNavigation } from "./PrimaryNavigation";
@@ -36,7 +36,7 @@ export function SiteFooter() {
       <div className="shell footer-grid">
         <div className="footer-brand">
           <Link className="brand" href="/"><Mark /><span className="brand-word">HORALIX</span></Link>
-          <p>AI-assisted echocardiography workflow, built around clinician review.</p>
+          <p>Sarajevo-built AI-assisted echocardiography workflow, designed around clinician review.</p>
           <div className="status-note"><span /> Pilot-stage · Pre-clearance</div>
         </div>
         <div>
@@ -51,7 +51,7 @@ export function SiteFooter() {
         </div>
         <div>
           <p className="footer-label">Company</p>
-          <Link href="/about">About</Link><Link href="/investors">Investors</Link>
+          <Link href="/about">About</Link><Link href="/news">News</Link><Link href="/investors">Investors</Link>
           <Link href="/contact">Contact</Link><a href="mailto:hello@horalix.com">hello@horalix.com</a>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "../_components/ReliableLink";
 import { VideoPlayer } from "../_components/VideoPlayer";
 import { Arrow, PageIntro, SplitCta } from "../_components/SiteChrome";
 import { pageMetadata } from "../_data/metadata";

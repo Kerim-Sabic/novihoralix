@@ -11,7 +11,6 @@ export function LeadForm({ intent }: { intent: "hospital_demo" | "investor_acces
   const [state, setState] = useState<"idle" | "sending" | "error">("idle");
   const [error, setError] = useState("");
   const widget = useRef<HTMLDivElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
   const errorRef = useRef<HTMLParagraphElement>(null);
   const targetHash = intent === "hospital_demo" ? "#request" : "#access";
   const fieldId = (field: string) => `${intent}-${field}`;
@@ -24,10 +23,6 @@ export function LeadForm({ intent }: { intent: "hospital_demo" | "investor_acces
     window.addEventListener("hashchange", openFromIntent);
     return () => window.removeEventListener("hashchange", openFromIntent);
   }, [targetHash]);
-
-  useEffect(() => {
-    if (opened) formRef.current?.focus();
-  }, [opened]);
 
   useEffect(() => {
     if (!opened || !siteKey || !widget.current) return;
@@ -47,7 +42,7 @@ export function LeadForm({ intent }: { intent: "hospital_demo" | "investor_acces
     const payload = Object.fromEntries(form.entries());
     const campaign = new URLSearchParams(window.location.search);
     try {
-      const response = await fetch("/api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...payload, intent, consentVersion: "2026-08-13", sourcePath: window.location.pathname, utm_source: campaign.get("utm_source") || "", utm_medium: campaign.get("utm_medium") || "", utm_campaign: campaign.get("utm_campaign") || "", turnstileToken: payload["cf-turnstile-response"] || "" }) });
+      const response = await fetch("/api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...payload, intent, consentVersion: "2026-08-14", sourcePath: window.location.pathname, utm_source: campaign.get("utm_source") || "", utm_medium: campaign.get("utm_medium") || "", utm_campaign: campaign.get("utm_campaign") || "", turnstileToken: payload["cf-turnstile-response"] || "" }) });
       if (!response.ok) { const data = await response.json().catch(() => ({})); setError(data.error || "We could not send your request. Please try again or email hello@horalix.com."); setState("error"); requestAnimationFrame(() => errorRef.current?.focus()); return; }
       window.dispatchEvent(new CustomEvent("horalix:track", { detail: { event: intent === "hospital_demo" ? "demo_submission" : "investor_submission" } }));
       window.location.assign(intent === "hospital_demo" ? "/thank-you/hospital" : "/thank-you/investor");
@@ -61,7 +56,7 @@ export function LeadForm({ intent }: { intent: "hospital_demo" | "investor_acces
   if (!opened) return <button type="button" className="button button-dark" data-track={intent === "hospital_demo" ? "demo_start" : "investor_start"} onClick={() => setOpened(true)}>Start secure request <span>→</span></button>;
 
   return (
-    <form ref={formRef} tabIndex={-1} aria-label={intent === "hospital_demo" ? "Hospital demo request" : "Investor materials request"} className="lead-form" onSubmit={submit}>
+    <form aria-label={intent === "hospital_demo" ? "Hospital demo request" : "Investor materials request"} className="lead-form" onSubmit={submit}>
       <div className="form-grid"><label htmlFor={fieldId("name")}>Full name<input id={fieldId("name")} required name="name" autoComplete="name" maxLength={80} /></label><label htmlFor={fieldId("email")}>Work email<input id={fieldId("email")} required name="workEmail" type="email" autoComplete="email" maxLength={120} /></label></div>
       <div className="form-grid"><label htmlFor={fieldId("organization")}>Organization<input id={fieldId("organization")} required name="organization" autoComplete="organization" maxLength={120} /></label><label htmlFor={fieldId("role")}>Role<input id={fieldId("role")} required name="role" autoComplete="organization-title" maxLength={80} /></label></div>
       <label htmlFor={fieldId("country")}>Country<input id={fieldId("country")} required name="country" autoComplete="country-name" maxLength={80} /></label>

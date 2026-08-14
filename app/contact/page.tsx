@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "../_components/ReliableLink";
 import { LeadForm } from "../_components/LeadForm";
 import { Arrow, PageIntro } from "../_components/SiteChrome";
 import { pageMetadata } from "../_data/metadata";

@@ -10,7 +10,7 @@ export function MotionLayer() {
     const root = document.documentElement;
     const header = document.querySelector<HTMLElement>(".site-header");
     const targets = Array.from(document.querySelectorAll<HTMLElement>(
-      ".section-heading, .workflow-step, .audience-card, .evidence-main, .evidence-side, .trust-row, .resource-card, .metricless-card, .feature-block, .timeline-row, .status-card, .source-row, .form-card, .split-cta-panel, .proof-item, .hero-visual",
+      ".section-heading, .workflow-step, .audience-card, .evidence-main, .evidence-side, .trust-row, .resource-card, .metricless-card, .feature-block, .timeline-row, .status-card, .source-row, .form-card, .split-cta-panel, .proof-item, .hero-visual, .pilot-card, .team-card, .news-card, .faq-list details, .program-list a",
     ));
     const entryTargets = Array.from(document.querySelectorAll<HTMLElement>(
       ".hero-copy > *, .page-intro .intro-grid > *, .article-hero .shell > *",
