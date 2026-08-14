@@ -64,6 +64,14 @@ test("evidence and resource hubs expose visible answer-oriented structure", asyn
   assert.match(resourcesHtml, /"@type":"ItemList"/);
 });
 
+test("research articles name their author and company reviewer", async () => {
+  const response = await render("/resources/human-oversight-in-echo-ai");
+  const html = await response.text();
+  assert.match(html, /By[\s\S]*Kerim Sabic[\s\S]*Company review by[\s\S]*Neuman Alkhalil/);
+  assert.match(html, /"@type":"Person"/);
+  assert.match(html, /"reviewedBy":\{"@id":"https:\/\/horalix\.com\/about#neuman-alkhalil"\}/);
+});
+
 test("verified news is indexable, in the sitemap, and individual updates render", async () => {
   const news = await render("/news");
   const newsHtml = await news.text();
@@ -83,7 +91,7 @@ test("navigation is server-resilient and brand film has no user controls or capt
   const response = await render();
   const html = await response.text();
   assert.match(html, /<a[^>]+href="\/platform"[^>]*>Platform<\/a>/);
-  assert.match(html, /<video[^>]+autoplay[^>]+muted[^>]+playsinline/i);
+  assert.match(html, /<video[^>]+autoplay[^>]+loop[^>]+muted[^>]+playsinline/i);
   assert.doesNotMatch(html, /<track|controls=""|controls="true"/i);
 });
 

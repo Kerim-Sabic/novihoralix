@@ -5,6 +5,8 @@ export type Resource = {
   description: string;
   reviewed: string;
   readTime: string;
+  author: { name: string; role: string; id: string };
+  reviewer: { name: string; role: string; id: string };
   answer: string;
   sections: { title: string; body: string[] }[];
   sources: { title: string; href: string }[];
@@ -19,6 +21,8 @@ export const resources: Resource[] = [
     description: "A practical framework for separating a compelling demo from a responsible, testable clinical workflow.",
     reviewed: "13 August 2026",
     readTime: "7 min",
+    author: { name: "Kerim Sabic", role: "CEO & Co-Founder", id: "kerim-sabic" },
+    reviewer: { name: "Affan Kapidzic", role: "Chief Technology Officer", id: "affan-kapidzic" },
     answer: "A strong pilot should define the intended workflow, the clinician’s decision rights, the validation boundary, failure handling, data governance, integration assumptions, and measurable success criteria before deployment begins.",
     sections: [
       {
@@ -58,6 +62,8 @@ export const resources: Resource[] = [
     description: "What meaningful clinician control should look like before, during, and after an AI-assisted review.",
     reviewed: "13 August 2026",
     readTime: "6 min",
+    author: { name: "Kerim Sabic", role: "CEO & Co-Founder", id: "kerim-sabic" },
+    reviewer: { name: "Neuman Alkhalil", role: "Chief Science Officer", id: "neuman-alkhalil" },
     answer: "Meaningful oversight means the clinician can understand the source view, inspect the measurement or overlay, edit or reject the result, and retain final responsibility for the signed report.",
     sections: [
       {
@@ -95,6 +101,8 @@ export const resources: Resource[] = [
     description: "The technical and operational questions to resolve before an echo-lab AI pilot begins.",
     reviewed: "13 August 2026",
     readTime: "8 min",
+    author: { name: "Affan Kapidzic", role: "Chief Technology Officer", id: "affan-kapidzic" },
+    reviewer: { name: "Kerim Sabic", role: "CEO & Co-Founder", id: "kerim-sabic" },
     answer: "A credible integration plan covers study routing, supported objects, metadata handling, failure recovery, review ownership, export destinations, access control, auditability, and a rollback path.",
     sections: [
       {

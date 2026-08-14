@@ -10,6 +10,7 @@ export function ProductFrame({ compact = false }: ProductFrameProps) {
       <div className="product-media brand-film-media">
         <video
           autoPlay
+          loop
           muted
           playsInline
           disablePictureInPicture
