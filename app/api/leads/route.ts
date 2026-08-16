@@ -46,7 +46,17 @@ export async function POST(request: Request) {
   if (!runtime.DB) return json({ error: "Secure form storage is not configured yet." }, 503);
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
   const now = Date.now(); const windowStart = Math.floor(now / 900_000) * 900_000; const rateKey = await hashRateKey(ip, windowStart);
-  const rate = await runtime.DB.prepare("INSERT INTO rate_limits (key, window_start, count) VALUES (?, ?, 1) ON CONFLICT(key) DO UPDATE SET count = count + 1 RETURNING count").bind(rateKey, windowStart).first<{ count: number }>();
+
+  // Any D1 failure — most commonly an unmigrated database — used to escape as an unhandled
+  // rejection and return a bare 500 with no body. Surface it as a real error instead, so the
+  // cause is visible in logs rather than presenting as a generic client-side failure.
+  let rate: { count: number } | null;
+  try {
+    rate = await runtime.DB.prepare("INSERT INTO rate_limits (key, window_start, count) VALUES (?, ?, 1) ON CONFLICT(key) DO UPDATE SET count = count + 1 RETURNING count").bind(rateKey, windowStart).first<{ count: number }>();
+  } catch (cause) {
+    console.error("leads: rate-limit write failed", cause);
+    return json({ error: "The secure request service is temporarily unavailable. Please email support@horalix.com." }, 503);
+  }
   if ((rate?.count || 1) > 5) return json({ error: "Too many requests. Please try again later." }, 429);
 
   if (runtime.TURNSTILE_SECRET_KEY) {
@@ -56,11 +66,17 @@ export async function POST(request: Request) {
     if (!verification.success) return json({ error: "Security verification failed. Please try again." }, 400);
   }
 
-  await runtime.DB.prepare("DELETE FROM leads WHERE created_at < ?").bind(now - 180 * 24 * 60 * 60 * 1000).run();
-  await runtime.DB.prepare("DELETE FROM rate_limits WHERE window_start < ?").bind(now - 24 * 60 * 60 * 1000).run();
   const id = crypto.randomUUID();
-  await runtime.DB.prepare("INSERT INTO leads (id, intent, name, work_email, organization, role, country, message, consent_version, source_path, utm_source, utm_medium, utm_campaign, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-    .bind(id, intent, name, workEmail, organization, role, country, message || null, consentVersion, sourcePath, clean(body.utm_source, limits.utm) || null, clean(body.utm_medium, limits.utm) || null, clean(body.utm_campaign, limits.utm) || null, now).run();
+  try {
+    await runtime.DB.prepare("DELETE FROM leads WHERE created_at < ?").bind(now - 180 * 24 * 60 * 60 * 1000).run();
+    await runtime.DB.prepare("DELETE FROM rate_limits WHERE window_start < ?").bind(now - 24 * 60 * 60 * 1000).run();
+    await runtime.DB.prepare("INSERT INTO leads (id, intent, name, work_email, organization, role, country, message, consent_version, source_path, utm_source, utm_medium, utm_campaign, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+      .bind(id, intent, name, workEmail, organization, role, country, message || null, consentVersion, sourcePath, clean(body.utm_source, limits.utm) || null, clean(body.utm_medium, limits.utm) || null, clean(body.utm_campaign, limits.utm) || null, now).run();
+  } catch (cause) {
+    // Never drop an enquiry silently: log the full lead so it can be recovered from logs.
+    console.error("leads: write failed", { id, intent, workEmail, organization }, cause);
+    return json({ error: "We could not store your request. Please email support@horalix.com and we will pick it up directly." }, 503);
+  }
 
   const target = intent === "hospital_demo" ? runtime.HOSPITAL_NOTIFICATION_EMAIL : runtime.INVESTOR_NOTIFICATION_EMAIL;
   if (runtime.RESEND_API_KEY && runtime.RESEND_FROM_EMAIL && target) {

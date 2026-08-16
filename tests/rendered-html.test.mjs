@@ -77,14 +77,44 @@ test("the team page renders all four verified portraits and Person records", asy
   const html = await response.text();
   for (const [name, image] of [
     ["Kerim Sabic", "/team/kerim-sabic.webp"],
-    ["Amr Husain", "/team/amr-husain.png"],
-    ["Affan Kapidzic", "/team/affan-kapidzic.png"],
-    ["Neuman Alkhalil", "/team/neuman-alkhalil.png"],
+    ["Amr Husain", "/team/amr-husain.webp"],
+    ["Affan Kapidzic", "/team/affan-kapidzic.webp"],
+    ["Neuman Alkhalil", "/team/neuman-alkhalil.webp"],
   ]) {
     assert.match(html, new RegExp(name));
     assert.match(html, new RegExp(image.replaceAll("/", "\\/")));
   }
-  assert.equal((html.match(/"@type":"Person"/g) || []).length, 4);
+  // Four founders plus four advisors. The counts are asserted separately because only
+  // founders may carry `worksFor` — an advisor rendered as an employee is a factual error.
+  assert.equal((html.match(/"@type":"Person"/g) || []).length, 8);
+  assert.equal((html.match(/"worksFor"/g) || []).length, 4);
+
+  for (const advisor of ["Bojan Lazic", "Damir Vrabac", "Nabil Naser", "Taib Delic"]) {
+    assert.match(html, new RegExp(advisor), advisor);
+  }
+  // The pilot-site affiliation must stay visible next to the advisor who holds it.
+  assert.match(html, /Poliklinika Dr Nabil, a named Horalix pilot site/);
+});
+
+test("team identities resolve to verifiable external profiles", async () => {
+  const about = await (await render("/about")).text();
+  const profiles = [
+    "https://www.linkedin.com/in/kerims/",
+    "https://www.linkedin.com/in/amr-husain-6ab6b71b/",
+    "https://www.linkedin.com/in/affan-kapidzic/",
+    "https://www.linkedin.com/in/neuman-alkhalil/",
+  ];
+  for (const profile of profiles) {
+    // Present twice: once as a visible link, once inside the Person sameAs.
+    assert.match(about, new RegExp(profile.replaceAll("/", "\\/")), profile);
+  }
+  assert.equal((about.match(/"sameAs":\["https:\/\/www\.linkedin\.com\/in\//g) || []).length, 4);
+
+  // An article's author and reviewer carry the same verifiable identity.
+  const article = await (await render("/resources/gdpr-clinical-ai-hospital-pilots")).text();
+  assert.match(article, /"@id":"https:\/\/horalix\.com\/about#amr-husain"/);
+  assert.match(article, /linkedin\.com\/in\/amr-husain-6ab6b71b/);
+  assert.match(article, /linkedin\.com\/in\/affan-kapidzic/);
 });
 
 test("verified news is indexable, in the sitemap, and individual updates render", async () => {
@@ -108,6 +138,80 @@ test("navigation is server-resilient and brand film has no user controls or capt
   assert.match(html, /<a[^>]+href="\/platform"[^>]*>Platform<\/a>/);
   assert.match(html, /<video[^>]+autoplay[^>]+loop[^>]+muted[^>]+playsinline/i);
   assert.doesNotMatch(html, /<track|controls=""|controls="true"/i);
+});
+
+test("approved build figures render from the claim register", async () => {
+  const html = await (await render()).text();
+  assert.match(html, /50\+/);
+  assert.match(html, /~80/);
+  assert.match(html, /~10s/);
+  // The figures must never appear without the internal-benchmark boundary beside them.
+  assert.match(html, /Internal benchmarks measured on the current pilot build/);
+  assert.match(html, /not diagnostic performance/i);
+});
+
+test("the hospital dossier carries buyer-facing structure and schema", async () => {
+  const html = await (await render("/for-hospitals")).text();
+  assert.match(html, /"@type":"Service"/);
+  assert.match(html, /"@type":"HowTo"/);
+  assert.match(html, /"@type":"FAQPage"/);
+  assert.match(html, /"@type":"BreadcrumbList"/);
+  for (const heading of ["The bottleneck is after image capture", "Questions your DPO will ask first", "The objections we expect, answered directly"]) {
+    assert.match(html, new RegExp(heading), heading);
+  }
+  assert.match(html, /Who is controller and who is processor\?/);
+});
+
+test("the entity graph names the organisation, founders, and product tour video", async () => {
+  const home = await (await render()).text();
+  assert.match(home, /"@type":\["MedicalOrganization","Organization"\]/);
+  assert.match(home, /"founder":\[/);
+  assert.match(home, /horalix\.com\/about#kerim-sabic/);
+  const tour = await (await render("/product-tour")).text();
+  assert.match(tour, /"@type":"VideoObject"/);
+  assert.match(tour, /"transcript":/);
+});
+
+test("answer engines are allowed and the icon set is square", async () => {
+  const robots = await (await render("/robots.txt")).text();
+  for (const agent of ["ClaudeBot", "PerplexityBot", "Google-Extended", "GPTBot", "OAI-SearchBot"]) {
+    assert.match(robots, new RegExp(`User-Agent: ${agent}`, "i"), agent);
+  }
+  assert.doesNotMatch(robots, /User-Agent: GPTBot\s*\nDisallow: \/\s*$/i);
+  const html = await (await render()).text();
+  assert.match(html, /horalix-icon-192\.png/);
+  assert.match(html, /rel="apple-touch-icon"[^>]*horalix-icon-180\.png|horalix-icon-180\.png/);
+  assert.doesNotMatch(html, /rel="icon"[^>]*horalix-mark\.png/);
+});
+
+test("the research library is clustered, complete, and in the sitemap", async () => {
+  const html = await (await render("/resources")).text();
+  for (const cluster of ["Buyer guides", "Clinical workflow", "Integration and deployment", "Governance and evidence"]) {
+    assert.match(html, new RegExp(cluster), cluster);
+  }
+  const sitemap = await (await render("/sitemap.xml")).text();
+  for (const slug of [
+    "ai-echocardiography-software-guide",
+    "echo-reporting-burden",
+    "automated-vs-manual-echo-measurement",
+    "clinical-ai-procurement-checklist",
+    "gdpr-clinical-ai-hospital-pilots",
+    "eu-mdr-clinical-ai-pathway",
+    "focused-cardiac-ultrasound-ai-evidence",
+    "on-prem-vs-cloud-clinical-ai",
+  ]) {
+    assert.match(sitemap, new RegExp(`/resources/${slug}<`), slug);
+    const article = await render(`/resources/${slug}`);
+    assert.equal(article.status, 200, slug);
+    assert.match(await article.text(), /"@type":"Article"/, slug);
+  }
+});
+
+test("news articles carry their own social card and breadcrumbs", async () => {
+  const html = await (await render("/news/horalix-nvidia-inception")).text();
+  assert.match(html, /"@type":"BreadcrumbList"/);
+  assert.match(html, /<meta name="twitter:title" content="[^"]*NVIDIA/i);
+  assert.doesNotMatch(html, /<meta name="twitter:title" content="Make every echo ready for review\."/);
 });
 
 test("legacy solution and demo URLs redirect", async () => {

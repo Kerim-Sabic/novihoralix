@@ -21,8 +21,8 @@ export const newsItems: NewsItem[] = [
     summary: "A scoped evaluation of Horalix inside a real echocardiography workflow under physician supervision.",
     published: "2026-06-19",
     displayDate: "19 June 2026",
-    image: "/proof/ukc-maribor.webp",
-    imageAlt: "UKC Maribor and Horalix pilot collaboration",
+    // Image withheld: /proof/ukc-maribor.webp is truncated in the repository and fails to
+    // decode, so the card falls back to the brand graphic until an intact file is committed.
     status: "Company-confirmed active pilot collaboration",
     paragraphs: [
       "Horalix began a pilot collaboration with University Medical Centre Maribor to evaluate how its AI-assisted echocardiography workflow fits into real clinical review.",
@@ -39,8 +39,7 @@ export const newsItems: NewsItem[] = [
     summary: "A supervised Sarajevo evaluation focused on workflow fit and clinician review.",
     published: "2026-01-30",
     displayDate: "30 January 2026",
-    image: "/proof/dr-nabil.webp",
-    imageAlt: "Horalix and Poliklinika Dr Nabil clinical evaluation collaboration",
+    // Image withheld: /proof/dr-nabil.webp is truncated in the repository and fails to decode.
     status: "Company-confirmed active pilot collaboration",
     paragraphs: [
       "Horalix is working with Poliklinika Dr Nabil in Sarajevo to evaluate its echo-first clinical-AI workflow in a supervised clinical setting.",

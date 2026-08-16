@@ -14,7 +14,12 @@ export async function POST(request: Request) {
   const runtime = env as unknown as { DB?: D1Database };
   if (!runtime.DB) return new Response(null, { status: 204 });
   const now = Date.now();
-  await runtime.DB.prepare("INSERT INTO anonymous_events (id, event, path, source, created_at) VALUES (?, ?, ?, ?, ?)").bind(crypto.randomUUID(), body.event, body.path, body.source, now).run();
-  await runtime.DB.prepare("DELETE FROM anonymous_events WHERE created_at < ?").bind(now - 400 * 24 * 60 * 60 * 1000).run();
+  // Analytics must never break a page. A failed write is logged and swallowed.
+  try {
+    await runtime.DB.prepare("INSERT INTO anonymous_events (id, event, path, source, created_at) VALUES (?, ?, ?, ?, ?)").bind(crypto.randomUUID(), body.event, body.path, body.source, now).run();
+    await runtime.DB.prepare("DELETE FROM anonymous_events WHERE created_at < ?").bind(now - 400 * 24 * 60 * 60 * 1000).run();
+  } catch (cause) {
+    console.error("events: write failed", cause);
+  }
   return new Response(null, { status: 204 });
 }

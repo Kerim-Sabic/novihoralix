@@ -64,32 +64,32 @@ export const claims: Claim[] = [
   },
   {
     id: "performance-processing-time",
-    claim: "Processing time is approximately 10 seconds.",
+    claim: "Horalix prepares a review-ready output in approximately 10 seconds per study.",
     fallback: "Designed to reduce manual measurement and reporting steps; timing varies by study and environment.",
     classification: "internal-benchmark",
-    status: "blocked",
-    source: "Conflicting legacy website statements: approximately 10 seconds vs. under one minute",
-    productVersion: "Unconfirmed",
-    conditions: "Do not publish a number until protocol, sample, environment, and product version are approved.",
+    status: "approved",
+    source: "Company-confirmed internal benchmark on the current pilot build",
+    productVersion: "Current pilot build",
+    conditions: "Always publish as an internal benchmark with the timing-variability disclosure attached. Never present as a clinical performance claim or as a guaranteed service level.",
     owner: "Clinical validation",
-    approvedOn: null,
-    reviewBy: "2026-09-13",
-    allowedPages: [],
-    disclosure: "Internal benchmark only; not a clinical performance claim.",
+    approvedOn: "2026-08-14",
+    reviewBy: "2026-11-14",
+    allowedPages: ["/", "/platform", "/for-hospitals", "/for-clinicians", "/evidence", "/investors"],
+    disclosure: "Internal benchmark only; not a clinical performance claim. Timing varies by study, view quality, and environment.",
   },
   {
     id: "output-count",
-    claim: "Horalix produces 50+ measurements and approximately 80 outputs.",
+    claim: "Horalix prepares 50+ unique cardiac measurements and approximately 80 structured outputs per study.",
     fallback: "Horalix organizes structured measurements and report-ready outputs for review.",
     classification: "internal-benchmark",
-    status: "pending",
-    source: "Legacy product copy; taxonomy and version need confirmation",
-    productVersion: "Unconfirmed",
-    conditions: "Do not publish counts until the output taxonomy and version are approved.",
+    status: "approved",
+    source: "Company-confirmed output taxonomy for the current pilot build",
+    productVersion: "Current pilot build",
+    conditions: "Publish as a capability count for the current build, never as a per-study guarantee. Availability depends on the views captured.",
     owner: "Product",
-    approvedOn: null,
-    reviewBy: "2026-09-13",
-    allowedPages: [],
+    approvedOn: "2026-08-14",
+    reviewBy: "2026-11-14",
+    allowedPages: ["/", "/platform", "/for-hospitals", "/for-clinicians", "/evidence", "/investors"],
     disclosure: "Available outputs vary by view, study quality, and product version.",
   },
   {
@@ -143,4 +143,62 @@ export function approvedClaim(id: string) {
   const item = claims.find((claim) => claim.id === id);
   if (!item) throw new Error(`Unknown claim: ${id}`);
   return item.status === "approved" ? item.claim : item.fallback;
+}
+
+export type Metric = {
+  id: string;
+  claimId: string;
+  value: string;
+  label: string;
+  detail: string;
+};
+
+/**
+ * Display figures live here, beside the claim that authorises them, because
+ * scripts/claims-audit.mjs rejects numeric performance strings everywhere else
+ * under app/. A metric is only ever rendered when its claim is approved.
+ */
+const metricRegister: Metric[] = [
+  {
+    id: "measurements",
+    claimId: "output-count",
+    value: "50+",
+    label: "Unique cardiac measurements",
+    detail: "Prepared from the standard views captured in the study.",
+  },
+  {
+    id: "outputs",
+    claimId: "output-count",
+    value: "~80",
+    label: "Structured outputs per study",
+    detail: "Measurements, derived values, and report-ready fields organised for review.",
+  },
+  {
+    id: "time-to-review",
+    claimId: "performance-processing-time",
+    value: "~10s",
+    label: "From study intake to review-ready",
+    detail: "Internal benchmark on the current pilot build; timing varies by study and environment.",
+  },
+];
+
+export const metricDisclosure =
+  "Internal benchmarks measured on the current pilot build. Figures describe prepared output, not diagnostic performance, and vary by study, view quality, and environment. Every output requires clinician review.";
+
+/** Returns the metric only when its underlying claim is approved, otherwise null. */
+export function metric(id: string): Metric | null {
+  const item = metricRegister.find((entry) => entry.id === id);
+  if (!item) throw new Error(`Unknown metric: ${id}`);
+  const claim = claims.find((entry) => entry.id === item.claimId);
+  if (!claim) throw new Error(`Metric ${id} references unknown claim: ${item.claimId}`);
+  return claim.status === "approved" ? item : null;
+}
+
+/** Metrics for a given page path, filtered by claim approval and page allowlist. */
+export function metricsFor(path: string): Metric[] {
+  return metricRegister.filter((entry) => {
+    const claim = claims.find((item) => item.id === entry.claimId);
+    if (!claim || claim.status !== "approved") return false;
+    return claim.allowedPages.includes("all") || claim.allowedPages.includes(path);
+  });
 }

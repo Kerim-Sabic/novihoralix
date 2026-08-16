@@ -1,12 +1,67 @@
 import Link from "../_components/ReliableLink";
 import { LeadForm } from "../_components/LeadForm";
-import { Arrow, PageIntro } from "../_components/SiteChrome";
 import { pageMetadata } from "../_data/metadata";
 
-export const metadata = pageMetadata({ title: "Contact Horalix", description: "Contact Horalix for hospital demos, investor access, partnerships, press, and general company enquiries.", path: "/contact" });
+export const metadata = pageMetadata({ title: "Request a Horalix demo", description: "Book a focused demo of the Horalix AI-assisted echocardiography workflow, or request investor materials.", path: "/contact" });
 
-export default function Contact() {
-  return <><PageIntro eyebrow="Contact Horalix" title="Start with the conversation you need." copy="Choose the most direct route for hospital evaluation, investor access, press, or a general company enquiry." />
-    <section className="section shell"><div className="audience-grid"><article className="audience-card"><div><p className="eyebrow">Hospitals and clinicians</p><h2>Evaluate the workflow.</h2><p>Discuss pilot scope, DICOM integration, evidence, security, and clinician review.</p></div><Link className="text-link" href="/for-hospitals#request">Request hospital demo <Arrow /></Link></article><article className="audience-card"><div><p className="eyebrow">Investors</p><h2>Review the company.</h2><p>Request current company materials and a focused conversation with the team.</p></div><Link className="text-link" href="/investors#access">Request investor materials <Arrow /></Link></article></div></section>
-    <section className="section-tight shell"><div className="form-section"><div><p className="eyebrow">General enquiry</p><h2>Not sure where to start?</h2><p className="lede">Use the hospital form for a general business enquiry or email the relevant team directly.</p><div className="timeline"><div className="timeline-row"><b>General</b><p><a href="mailto:hello@horalix.com">hello@horalix.com</a></p></div><div className="timeline-row"><b>Press</b><p><a href="mailto:press@horalix.com">press@horalix.com</a></p></div><div className="timeline-row"><b>Privacy</b><p><a href="mailto:privacy@horalix.com">privacy@horalix.com</a></p></div></div></div><div className="form-card"><h3>Send a business enquiry</h3><p>Do not include patient information or clinical data.</p><LeadForm intent="hospital_demo" /></div></div></section></>;
+const contactGraph = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "@id": "https://horalix.com/contact#page",
+  url: "https://horalix.com/contact",
+  name: "Request a Horalix demo",
+  description: "Request a demo of the Horalix echocardiography workflow, or request investor materials.",
+  inLanguage: "en",
+  isPartOf: { "@id": "https://horalix.com/#website" },
+  about: { "@id": "https://horalix.com/#organization" },
+  mainEntity: {
+    "@id": "https://horalix.com/#organization",
+    contactPoint: [
+      { "@type": "ContactPoint", contactType: "sales", email: "support@horalix.com", areaServed: "Europe", availableLanguage: ["en", "bs"] },
+      { "@type": "ContactPoint", contactType: "executive", email: "kerim@horalix.com", areaServed: "Europe", availableLanguage: ["en", "bs"] },
+    ],
+  },
+};
+
+/**
+ * One page, two intents. `?for=investor` switches the form so an investor request is still
+ * recorded and routed as `investor_access` rather than logged as a hospital demo.
+ */
+export default async function Contact({ searchParams }: { searchParams: Promise<{ for?: string }> }) {
+  const investor = (await searchParams).for === "investor";
+
+  return <>
+    {/* Centred masthead over a single card — the form is the whole page. */}
+    <section className="contact-hero">
+      <div className="shell">
+        <p className="eyebrow">{investor ? "Investor materials" : "Request a demo"}</p>
+        <h1>
+          {investor
+            ? <>Review the company <span>behind the workflow.</span></>
+            : <>Talk to us about <span>your echo workflow.</span></>}
+        </h1>
+        <p className="lede">
+          {investor
+            ? "Tell us who you are and what you would like to understand. We will send current materials and arrange a focused conversation with the team."
+            : "Bring your integration, governance, and review questions. We will shape the conversation around your environment rather than a generic script."}
+        </p>
+
+        <div className="contact-tabs">
+          <Link className={investor ? "contact-tab" : "contact-tab is-active"} href="/contact">Hospital demo</Link>
+          <Link className={investor ? "contact-tab is-active" : "contact-tab"} href="/contact?for=investor">Investor materials</Link>
+        </div>
+
+        <div className="contact-card">
+          {/* The card is the whole page, so the form starts expanded rather than behind a button. */}
+          <LeadForm intent={investor ? "investor_access" : "hospital_demo"} startOpen />
+        </div>
+
+        <ul className="contact-direct">
+          <li><span>General and support</span><a href="mailto:support@horalix.com">support@horalix.com</a></li>
+          <li><span>Founder direct</span><a href="mailto:kerim@horalix.com">kerim@horalix.com</a></li>
+        </ul>
+      </div>
+    </section>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(contactGraph) }} />
+  </>;
 }

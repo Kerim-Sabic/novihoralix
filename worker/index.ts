@@ -68,6 +68,19 @@ const worker = {
     headers.set("Cross-Origin-Opener-Policy", "same-origin");
     headers.set("Cross-Origin-Resource-Policy", "same-origin");
     headers.set("X-DNS-Prefetch-Control", "off");
+
+    // Pages carry no per-user state, so the edge may serve them immediately while it
+    // revalidates in the background. Without this every HTML request is a full origin
+    // round trip, which is the largest avoidable component of LCP on repeat visits.
+    if (!headers.has("Cache-Control")) {
+      const contentType = headers.get("Content-Type") ?? "";
+      if (contentType.includes("text/html")) {
+        headers.set("Cache-Control", "public, max-age=0, s-maxage=300, stale-while-revalidate=86400");
+      } else if (url.pathname === "/robots.txt" || url.pathname === "/sitemap.xml" || url.pathname.endsWith(".txt") || url.pathname === "/manifest.webmanifest") {
+        headers.set("Cache-Control", "public, max-age=3600, s-maxage=3600");
+      }
+    }
+
     if (url.hostname !== "localhost" && url.hostname !== "127.0.0.1") {
       headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
       headers.set("Content-Security-Policy", "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com; frame-src https://challenges.cloudflare.com https://www.youtube-nocookie.com; connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com; font-src 'self' data:; upgrade-insecure-requests");

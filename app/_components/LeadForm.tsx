@@ -6,8 +6,10 @@ declare global { interface Window { turnstile?: { render: (element: HTMLElement,
 
 const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
-export function LeadForm({ intent }: { intent: "hospital_demo" | "investor_access" }) {
-  const [opened, setOpened] = useState(false);
+/** `startOpen` skips the collapsed "Start secure request" state — used where the form is
+ *  the whole point of the page rather than one block among many. */
+export function LeadForm({ intent, startOpen = false }: { intent: "hospital_demo" | "investor_access"; startOpen?: boolean }) {
+  const [opened, setOpened] = useState(startOpen);
   const [state, setState] = useState<"idle" | "sending" | "error">("idle");
   const [error, setError] = useState("");
   const widget = useRef<HTMLDivElement>(null);
@@ -43,11 +45,11 @@ export function LeadForm({ intent }: { intent: "hospital_demo" | "investor_acces
     const campaign = new URLSearchParams(window.location.search);
     try {
       const response = await fetch("/api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...payload, intent, consentVersion: "2026-08-14", sourcePath: window.location.pathname, utm_source: campaign.get("utm_source") || "", utm_medium: campaign.get("utm_medium") || "", utm_campaign: campaign.get("utm_campaign") || "", turnstileToken: payload["cf-turnstile-response"] || "" }) });
-      if (!response.ok) { const data = await response.json().catch(() => ({})); setError(data.error || "We could not send your request. Please try again or email hello@horalix.com."); setState("error"); requestAnimationFrame(() => errorRef.current?.focus()); return; }
+      if (!response.ok) { const data = await response.json().catch(() => ({})); setError(data.error || "We could not send your request. Please try again or email support@horalix.com."); setState("error"); requestAnimationFrame(() => errorRef.current?.focus()); return; }
       window.dispatchEvent(new CustomEvent("horalix:track", { detail: { event: intent === "hospital_demo" ? "demo_submission" : "investor_submission" } }));
       window.location.assign(intent === "hospital_demo" ? "/thank-you/hospital" : "/thank-you/investor");
     } catch {
-      setError("The secure request service is temporarily unavailable. Please try again or email hello@horalix.com.");
+      setError("The secure request service is temporarily unavailable. Please try again or email support@horalix.com.");
       setState("error");
       requestAnimationFrame(() => errorRef.current?.focus());
     }
