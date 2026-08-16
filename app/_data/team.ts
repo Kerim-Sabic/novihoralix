@@ -57,13 +57,11 @@ export type Advisor = {
   id: string;
   name: string;
   role: string;
-  /** Omitted where we do not yet have a confirmed line — the card renders without it. */
-  focus?: string;
+  /** One-line background, company-supplied. Rendered under the role on the card. */
+  bio: string;
   /** Empty string renders the monogram fallback instead of a broken image. */
   image: string;
   initials: string;
-  /** Stated where an advisor is also connected to a named pilot site. */
-  disclosure?: string;
 };
 
 /**
@@ -76,30 +74,32 @@ export const advisors: Advisor[] = [
     id: "bojan-lazic",
     name: "Bojan Lazic",
     role: "Advisor",
-    image: "", // drop-in: /advisors/bojan-lazic.webp
+    bio: "Venture builder, angel investor, and longtime Techstars All-Star Mentor, with 15+ years of experience building and scaling companies across Europe and the U.S.",
+    image: "/advisors/bojan-lazic.webp",
     initials: "BL",
   },
   {
     id: "damir-vrabac",
     name: "Damir Vrabac",
     role: "Advisor",
-    image: "", // drop-in: /advisors/damir-vrabac.webp
+    bio: "Stanford-trained AI researcher and co-founder of Valar Labs, an AI precision-oncology company backed by a16z and DCVC with $26M in funding.",
+    image: "/advisors/damir-vrabac.webp",
     initials: "DV",
   },
   {
     id: "nabil-naser",
     name: "Nabil Naser",
     role: "Clinical advisor",
-    focus: "Cardiology and echocardiography",
-    image: "", // drop-in: /advisors/nabil-naser.webp
+    bio: "Professor and consultant cardiologist specializing in cardiac imaging and echocardiography, with FACC, FESC, FASE and FEACVI fellowships.",
+    image: "/advisors/nabil-naser.webp",
     initials: "NN",
-    disclosure: "Also affiliated with Poliklinika Dr Nabil, a named Horalix pilot site.",
   },
   {
     id: "taib-delic",
     name: "Taib Delic",
     role: "Clinical advisor",
-    image: "", // drop-in: /advisors/taib-delic.webp
+    bio: "Specialist in gynecology and obstetrics with extensive experience in medical ultrasound, perinatal medicine, clinical leadership, and physician education.",
+    image: "/advisors/taib-delic.webp",
     initials: "TD",
   },
 ];
@@ -119,7 +119,8 @@ export function advisorNode(id: string) {
     name: advisor.name,
     jobTitle: advisor.role,
     url,
-    ...(advisor.focus ? { knowsAbout: advisor.focus } : {}),
+    description: advisor.bio,
+    ...(advisor.image ? { image: `https://horalix.com${advisor.image}` } : {}),
   };
 }
 

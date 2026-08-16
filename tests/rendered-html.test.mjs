@@ -89,11 +89,19 @@ test("the team page renders all four verified portraits and Person records", asy
   assert.equal((html.match(/"@type":"Person"/g) || []).length, 8);
   assert.equal((html.match(/"worksFor"/g) || []).length, 4);
 
-  for (const advisor of ["Bojan Lazic", "Damir Vrabac", "Nabil Naser", "Taib Delic"]) {
+  for (const [advisor, portrait] of [
+    ["Bojan Lazic", "/advisors/bojan-lazic.webp"],
+    ["Damir Vrabac", "/advisors/damir-vrabac.webp"],
+    ["Nabil Naser", "/advisors/nabil-naser.webp"],
+    ["Taib Delic", "/advisors/taib-delic.webp"],
+  ]) {
     assert.match(html, new RegExp(advisor), advisor);
+    assert.match(html, new RegExp(portrait.replaceAll("/", "\\/")), portrait);
   }
-  // The pilot-site affiliation must stay visible next to the advisor who holds it.
-  assert.match(html, /Poliklinika Dr Nabil, a named Horalix pilot site/);
+  // Every advisor carries a background line — a card with a name and no context is a regression.
+  for (const line of ["Techstars All-Star Mentor", "co-founder of Valar Labs", "FACC, FESC, FASE", "perinatal medicine"]) {
+    assert.ok(html.includes(line), line);
+  }
 });
 
 test("team identities resolve to verifiable external profiles", async () => {
