@@ -81,6 +81,13 @@ const worker = {
       }
     }
 
+    // Preview deploys answer on *.workers.dev while every canonical still points at
+    // horalix.com. Left crawlable, a preview competes with the real domain for the same
+    // queries, so it is refused indexing at the edge rather than relying on canonicals.
+    if (url.hostname.endsWith(".workers.dev")) {
+      headers.set("X-Robots-Tag", "noindex, nofollow");
+    }
+
     if (url.hostname !== "localhost" && url.hostname !== "127.0.0.1") {
       headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
       headers.set("Content-Security-Policy", "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com; frame-src https://challenges.cloudflare.com https://www.youtube-nocookie.com; connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com; font-src 'self' data:; upgrade-insecure-requests");

@@ -71,9 +71,9 @@ export default function Home() {
           <div className="hero-partners">
             <p className="hero-partners-label">Clinical collaborations</p>
             <ul>
-              <li><Image unoptimized src="/proof/ukc-maribor-logo.png" alt="UKC Maribor" width={286} height={55} /></li>
+              <li><Image unoptimized src="/proof/ukc-maribor-logo.png" alt="UKC Maribor" width={900} height={179} /></li>
               <li><Image unoptimized src="/proof/asa-hospital-logo.svg" alt="ASA Hospital" width={1920} height={223} className="is-wide" /></li>
-              <li><Image unoptimized src="/proof/dr-nabil-logo.svg" alt="Poliklinika Dr Nabil" width={257} height={72} /></li>
+              <li><Image unoptimized className="is-tonal" src="/proof/dr-nabil-logo.svg" alt="Poliklinika Dr Nabil" width={257} height={72} /></li>
             </ul>
           </div>
         </div>
@@ -98,7 +98,7 @@ export default function Home() {
           {/* Marks are knocked to white so the row reads as one set, and return to their
               true brand colour on hover. Logo use is subject to each site's permission. */}
           <article className="pilot-card pilot-card-logo">
-            <div className="pilot-plate"><Image unoptimized className="pilot-logo" src="/proof/ukc-maribor-logo.png" alt="UKC Maribor" width={286} height={55} /></div>
+            <div className="pilot-plate"><Image unoptimized className="pilot-logo" src="/proof/ukc-maribor-logo.png" alt="UKC Maribor" width={900} height={179} /></div>
             <div>
               <span className="pilot-state">Active pilot · Slovenia</span>
               <h3>UKC Maribor</h3>
@@ -124,7 +124,7 @@ export default function Home() {
             </div>
           </article>
           <article className="pilot-card pilot-card-logo">
-            <div className="pilot-plate"><Image unoptimized className="pilot-logo" src="/proof/dr-nabil-logo.svg" alt="Poliklinika Dr Nabil" width={257} height={72} /></div>
+            <div className="pilot-plate"><Image unoptimized className="pilot-logo pilot-logo-tonal" src="/proof/dr-nabil-logo.svg" alt="Poliklinika Dr Nabil" width={257} height={72} /></div>
             <div>
               <span className="pilot-state">Active pilot · Sarajevo</span>
               <h3>Poliklinika Dr Nabil</h3>
@@ -162,13 +162,6 @@ export default function Home() {
               <span><b>{person.name}</b><small>{person.role}</small></span>
             </Link>
           ))}
-        </div>
-        <div className="trust-links">
-          <p>Product evidence, field literature, human oversight, limitations, and regulatory status are published separately and dated.</p>
-          <span>
-            <Link className="text-link" href="/evidence">Evidence centre <Arrow /></Link>
-            <Link className="text-link" href="/security">Security approach <Arrow /></Link>
-          </span>
         </div>
       </section>
 

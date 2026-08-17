@@ -16,6 +16,7 @@ import { join } from "node:path";
 
 const remote = process.argv.includes("--remote");
 const hosting = JSON.parse(await readFile(".openai/hosting.json", "utf8"));
+const d1Config = JSON.parse(await readFile("d1.json", "utf8"));
 const binding = hosting.d1;
 if (!binding) {
   console.error("No d1 binding declared in .openai/hosting.json — nothing to migrate.");
@@ -39,7 +40,7 @@ await writeFile(
       main: "worker/index.ts",
       compatibility_date: "2025-01-01",
       compatibility_flags: ["nodejs_compat"],
-      d1_databases: [{ binding, database_name: "site-creator-d1", database_id: "00000000-0000-4000-8000-000000000000" }],
+      d1_databases: [{ binding, database_name: d1Config.database_name, database_id: d1Config.database_id }],
     },
     null,
     2,
